@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Generador de Contratos SaaS Pro | @necesitodisenos</title>
+    <title>Contrato de Diseño Pro | @necesitodisenos</title>
 
     <!-- Scripts CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- Librería para generar PDFs Reales -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- INICIO BLOQUE TAILWIND CONFIG -->
+    <!-- CONFIGURACIÓN TAILWIND -->
     <script>
         tailwind.config = {
             theme: {
@@ -31,32 +30,26 @@
                         display: ['Inter Tight', 'sans-serif'],
                         document: ['Inter', 'system-ui', 'sans-serif'],
                     },
-                    backgroundImage: {
-                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                        'glass-gradient': 'linear-gradient(180deg, rgba(22, 22, 24, 0.7) 0%, rgba(22, 22, 24, 0.4) 100%)',
-                    },
                     boxShadow: {
                         'glow': '0 0 30px -5px rgba(255, 69, 0, 0.3)',
                         'glow-hover': '0 0 40px -5px rgba(255, 69, 0, 0.5)',
-                        'card': '0 0 0 1px rgba(255,255,255,0.05), 0 8px 32px -8px rgba(0,0,0,0.5)',
                         'sheet': '0 0 0 1px rgba(255,255,255,0.08), 0 20px 40px -10px rgba(0,0,0,0.8)',
+                    },
+                    animation: {
+                        'pulse-orange': 'pulseOrange 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
                     keyframes: {
                         pulseOrange: {
                             '0%, 100%': { opacity: '1' },
                             '50%': { opacity: '.5' },
                         }
-                    },
-                    animation: {
-                        'pulse-orange': 'pulseOrange 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
         }
     </script>
-    <!-- FIN BLOQUE TAILWIND CONFIG -->
 
-    <!-- INICIO BLOQUE CSS -->
+    <!-- ESTILOS CSS -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap');
 
@@ -64,15 +57,11 @@
             background-color: #050505;
             color: #E5E5E5;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
-        ::selection {
-            background: rgba(255, 69, 0, 0.4);
-            color: white;
-        }
+        ::selection { background: rgba(255, 69, 0, 0.4); color: white; }
 
-        /* Patrón de Grid SaaS Sutil Mejorado */
+        /* Patrón de fondo SaaS */
         .bg-grid-pattern {
             background-size: 40px 40px;
             background-image: 
@@ -83,209 +72,118 @@
             pointer-events: none;
         }
 
-        /* Ambient Glow en el fondo */
         .bg-ambient-glow {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            width: 80vw;
-            height: 80vw;
-            max-width: 800px;
-            max-height: 800px;
+            position: absolute; top: 10%; left: 50%;
+            width: 80vw; height: 80vw; max-width: 800px; max-height: 800px;
             background: radial-gradient(circle, rgba(255,69,0,0.06) 0%, rgba(0,0,0,0) 70%);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 0;
+            transform: translate(-50%, -50%); pointer-events: none; z-index: 0;
         }
 
-        /* Scrollbar minimalista y elegante */
+        /* Scrollbars */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #27272A; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #3F3F46; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Componentes del Formulario */
+        /* Componentes UI */
         .glass-card {
             background: rgba(22, 22, 24, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
-            border-radius: 0.75rem;
-            transition: border-color 0.3s ease;
+            border-radius: 0.75rem; transition: border-color 0.3s ease;
         }
-        .glass-card:focus-within {
-            border-color: rgba(255, 69, 0, 0.3);
-        }
+        .glass-card:focus-within { border-color: rgba(255, 69, 0, 0.3); }
 
         .input-group { display: flex; flex-direction: column; gap: 0.35rem; }
-        .input-label { 
-            font-size: 0.7rem; 
-            text-transform: uppercase; 
-            letter-spacing: 0.08em; 
-            color: #A1A1AA; 
-            font-weight: 600; 
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
+        .input-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #A1A1AA; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
         .input-field { 
-            background-color: rgba(0,0,0,0.3); 
-            border: 1px solid #27272A; 
-            color: #F4F4F5; 
-            padding: 0.65rem 0.85rem; 
-            border-radius: 0.5rem; 
-            font-size: 0.875rem; 
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            width: 100%; 
+            background-color: rgba(0,0,0,0.3); border: 1px solid #27272A; color: #F4F4F5; 
+            padding: 0.65rem 0.85rem; border-radius: 0.5rem; font-size: 0.875rem; 
+            transition: all 0.2s; width: 100%; 
         }
-        .input-field:focus { 
-            outline: none; 
-            border-color: #FF4500; 
+        .input-field:focus:not(:disabled) { 
+            outline: none; border-color: #FF4500; 
             box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.2), inset 0 1px 2px rgba(0,0,0,0.5); 
             background-color: rgba(0,0,0,0.5);
         }
+        .input-field:disabled { opacity: 0.5; cursor: not-allowed; }
         .input-field::placeholder { color: #52525B; }
 
-        /* Estilos específicos para la hoja de previsualización */
+        .btn-na {
+            font-size: 0.65rem; background: #27272A; color: #A1A1AA;
+            padding: 2px 6px; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-na:hover { background: #FF4500; color: white; }
+
+        /* Documento y Edición */
         .document-sheet {
-            background-color: #121212;
-            background-image: linear-gradient(to bottom, #151515 0%, #111 100%);
-            color: #D4D4D8;
-            font-family: 'Inter', system-ui, sans-serif;
-            line-height: 1.7;
-            font-size: 0.95rem;
-            position: relative;
-            z-index: 10;
-            transition: all 0.3s ease;
+            background-color: #121212; background-image: linear-gradient(to bottom, #151515 0%, #111 100%);
+            color: #D4D4D8; font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.7; font-size: 0.95rem; position: relative; z-index: 10; transition: all 0.3s ease;
         }
         .document-sheet::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
             background: linear-gradient(90deg, transparent, #FF4500, transparent);
-            opacity: 0.5;
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
+            opacity: 0.5; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;
         }
         .document-sheet:focus {
-            outline: none;
-            box-shadow: 0 0 0 1px #FF4500, 0 20px 50px -10px rgba(0,0,0,0.8), 0 0 40px rgba(255,69,0,0.1);
-            transform: translateY(-2px);
+            outline: none; box-shadow: 0 0 0 2px #FF4500, 0 20px 50px -10px rgba(0,0,0,0.8);
         }
 
-        /* Estilos Inteligentes para los Textos del Contrato */
         .contract-placeholder {
-            background: rgba(255, 69, 0, 0.15);
-            color: #FF571A;
-            padding: 0.1rem 0.4rem;
-            border-radius: 0.25rem;
-            border: 1px dashed rgba(255, 69, 0, 0.4);
-            font-size: 0.9em;
-            font-weight: 500;
-            white-space: nowrap;
-            transition: all 0.2s;
-            cursor: pointer;
+            background: rgba(255, 69, 0, 0.15); color: #FF571A;
+            padding: 0.1rem 0.4rem; border-radius: 0.25rem;
+            border: 1px dashed rgba(255, 69, 0, 0.4); font-size: 0.9em; font-weight: 500;
+            white-space: nowrap; transition: all 0.2s; cursor: pointer;
         }
-        .contract-placeholder:hover {
-            background: rgba(255, 69, 0, 0.25);
-        }
+        .contract-placeholder:hover { background: rgba(255, 69, 0, 0.25); }
         .contract-filled {
-            color: #FFFFFF;
-            font-weight: 600;
-            border-bottom: 1px dotted rgba(255, 255, 255, 0.3);
-            transition: all 0.2s;
+            color: #FFFFFF; font-weight: 600; border-bottom: 1px dotted rgba(255, 255, 255, 0.3); transition: all 0.2s;
         }
 
-        /* Utilidades UX */
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        [data-tooltip]:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-8px);
-            background: #18181B;
-            border: 1px solid #27272A;
-            color: #fff;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            white-space: nowrap;
-            z-index: 100;
-            pointer-events: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-
-        /* Marca de agua flotante web */
+        /* Marca de agua */
         .web-watermark {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 3rem;
-            font-weight: 900;
-            color: rgba(255, 255, 255, 0.02);
-            pointer-events: none;
-            z-index: 0;
-            transform: rotate(-10deg);
-            white-space: nowrap;
+            position: fixed; bottom: 20px; right: 20px; font-size: 3rem; font-weight: 900;
+            color: rgba(255, 255, 255, 0.02); pointer-events: none; z-index: 0;
+            transform: rotate(-10deg); white-space: nowrap;
         }
 
-        /* ESTILOS PARA IMPRESIÓN DIRECTA */
+        /* Tooltip */
+        [data-tooltip]:hover::after {
+            content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%;
+            transform: translateX(-50%) translateY(-8px); background: #18181B; border: 1px solid #27272A;
+            color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 100;
+        }
+
+        /* Cláusulas (Prevención de saltos de página en PDF) */
+        .clausula { margin-bottom: 1.5rem; }
+
+        /* ESTILOS PARA IMPRESIÓN DIRECTA / PDF */
         @media print {
-            body, html {
-                background: white !important;
-                height: auto !important;
-            }
-            aside, .bg-grid-pattern, .bg-ambient-glow, .web-watermark, .toolbar-actions, #toast {
-                display: none !important;
-            }
-            main {
-                background: white !important;
-                height: auto !important;
-                overflow: visible !important;
-                display: block !important;
-            }
-            .document-wrapper {
-                padding: 0 !important;
-                margin: 0 !important;
-                display: block !important;
-            }
+            body, html { background: white !important; height: auto !important; }
+            aside, .bg-grid-pattern, .bg-ambient-glow, .web-watermark, .toolbar-actions, #toast, .mobile-fab { display: none !important; }
+            main { background: white !important; height: auto !important; overflow: visible !important; display: block !important; }
+            .document-wrapper { padding: 0 !important; margin: 0 !important; display: block !important; }
             #documentPreview {
-                box-shadow: none !important;
-                border: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                max-width: 100% !important;
-                color: black !important;
-                background: white !important;
-                white-space: pre-wrap !important;
+                box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important;
+                max-width: 100% !important; color: black !important; background: white !important; white-space: pre-wrap !important;
             }
             #documentPreview::before { display: none !important; }
-            .contract-placeholder {
-                border: none !important;
-                background: transparent !important;
-                color: #666 !important;
-            }
-            .contract-filled {
-                color: black !important;
-                border: none !important;
-            }
+            .contract-placeholder { border: none !important; background: transparent !important; color: #666 !important; }
+            .contract-filled { color: black !important; border: none !important; }
+            .clausula, p, h3, ul, li { page-break-inside: avoid !important; }
+            .firma-box { page-break-inside: avoid !important; }
         }
     </style>
 </head>
 <body class="bg-brand-bg text-gray-300 font-sans flex flex-col lg:flex-row h-screen overflow-hidden selection:bg-brand-orange/30 selection:text-white relative">
 
-    <!-- Marca de agua de fondo (Solo Web) -->
-    <div class="web-watermark font-display tracking-tighter">
-        @necesitodisenos
-    </div>
+    <div class="web-watermark font-display tracking-tighter">@necesitodisenos</div>
 
-    <!-- Notificaciones Toast -->
-    <div id="toast" class="fixed top-4 right-4 md:top-6 md:right-6 bg-[#18181B] border border-brand-border text-white px-4 py-3 md:px-5 md:py-3.5 rounded-xl shadow-2xl transform -translate-y-24 opacity-0 transition-all duration-400 ease-out z-[100] flex items-center gap-3 min-w-[280px]">
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 lg:top-6 lg:right-6 bg-[#18181B] border border-brand-border text-white px-4 py-3 rounded-xl shadow-2xl transform -translate-y-24 opacity-0 transition-all duration-400 ease-out z-[100] flex items-center gap-3 min-w-[280px]">
         <div class="bg-brand-orange/20 p-1.5 rounded-full shrink-0">
             <i class="ph-fill ph-check-circle text-brand-orange text-xl"></i>
         </div>
@@ -295,31 +193,40 @@
         </div>
     </div>
 
-    <!-- COLUMNA IZQUIERDA: Formulario de Control -->
-    <aside class="w-full lg:w-[460px] h-full flex flex-col bg-brand-surface border-r border-brand-border z-20 shadow-2xl relative shrink-0">
+    <!-- COLUMNA IZQUIERDA: Formulario -->
+    <aside class="w-full lg:w-[480px] h-full flex flex-col bg-brand-surface border-r border-brand-border z-20 shadow-2xl relative shrink-0">
         
-        <!-- Header del Sidebar -->
-        <header class="p-5 md:p-6 border-b border-brand-border bg-brand-surface/95 backdrop-blur z-10 shrink-0 flex justify-between items-start">
-            <div class="flex flex-col gap-1.5">
-                <h1 class="text-xl md:text-2xl font-display font-bold text-white flex items-center gap-2 tracking-tight">
-                    <div class="bg-brand-orange p-1.5 rounded-lg shadow-glow">
-                        <i class="ph-bold ph-file-text text-white text-base md:text-lg"></i>
-                    </div>
-                    Contrato<span class="text-brand-orange">Pro</span>
-                </h1>
-                <p class="text-xs text-gray-400 font-medium ml-1">Generador de Documentos SaaS</p>
+        <header class="p-5 lg:p-6 border-b border-brand-border bg-brand-surface/95 backdrop-blur z-10 shrink-0 flex flex-col gap-4">
+            <div class="flex justify-between items-start">
+                <div class="flex flex-col gap-1.5">
+                    <h1 class="text-xl lg:text-2xl font-display font-bold text-white flex items-center gap-2 tracking-tight">
+                        <div class="bg-brand-orange p-1.5 rounded-lg shadow-glow">
+                            <i class="ph-bold ph-pen-nib text-white text-base lg:text-lg"></i>
+                        </div>
+                        Contrato<span class="text-brand-orange">DeDiseño</span>
+                    </h1>
+                    <p class="text-xs text-gray-400 font-medium ml-1">Generador de Acuerdos SaaS</p>
+                </div>
+                <button onclick="resetForm()" class="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors" title="Limpiar todo">
+                    <i class="ph ph-trash text-lg"></i>
+                </button>
             </div>
-            <button onclick="resetForm()" class="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors" title="Limpiar todo">
-                <i class="ph ph-trash text-lg md:text-xl"></i>
-            </button>
+            
+            <!-- Barra de Progreso -->
+            <div class="w-full bg-brand-card rounded-full h-1.5 border border-white/5 relative overflow-hidden">
+                <div id="progressBar" class="bg-brand-orange h-1.5 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between items-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                <span id="progressText">0/26 COMPLETADOS</span>
+                <span class="text-brand-orange" id="progressPercent">0%</span>
+            </div>
         </header>
 
-        <!-- Área de Inputs (Scrollable) -->
-        <div class="flex-1 overflow-y-auto p-5 md:p-6 hide-scrollbar relative">
-            <form id="contractForm" class="flex flex-col gap-6 pb-32">
+        <div class="flex-1 overflow-y-auto p-5 lg:p-6 hide-scrollbar relative">
+            <form id="contractForm" class="flex flex-col gap-6 pb-28">
                 
-                <!-- Tarjeta: Datos de Emisión -->
-                <div class="glass-card p-4 md:p-5">
+                <!-- Emisión -->
+                <div class="glass-card p-4 lg:p-5">
                     <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3">
                         <i class="ph-fill ph-calendar-blank text-brand-orange"></i> Detalles de Emisión
                     </h2>
@@ -330,7 +237,7 @@
                         </div>
                         <div class="input-group">
                             <label class="input-label">Día</label>
-                            <input type="text" id="dia" class="input-field" placeholder="Ej. 15" oninput="updatePreview()">
+                            <input type="text" inputmode="numeric" id="dia" class="input-field" placeholder="Ej. 15" oninput="updatePreview()">
                         </div>
                         <div class="input-group">
                             <label class="input-label">Mes</label>
@@ -338,13 +245,13 @@
                         </div>
                         <div class="input-group col-span-2">
                             <label class="input-label">Año</label>
-                            <input type="text" id="ano" class="input-field" placeholder="Ej. 2024" oninput="updatePreview()">
+                            <input type="text" inputmode="numeric" id="ano" class="input-field" placeholder="Ej. 2024" oninput="updatePreview()">
                         </div>
                     </div>
                 </div>
 
-                <!-- Tarjeta: El Cliente -->
-                <div class="glass-card p-4 md:p-5">
+                <!-- Cliente -->
+                <div class="glass-card p-4 lg:p-5">
                     <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3">
                         <i class="ph-fill ph-buildings text-brand-orange"></i> Datos del Cliente
                     </h2>
@@ -364,8 +271,8 @@
                     </div>
                 </div>
 
-                <!-- Tarjeta: El Diseñador -->
-                <div class="glass-card p-4 md:p-5">
+                <!-- Diseñador -->
+                <div class="glass-card p-4 lg:p-5">
                     <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3">
                         <i class="ph-fill ph-pen-nib text-brand-orange"></i> Datos del Diseñador
                     </h2>
@@ -385,98 +292,98 @@
                     </div>
                 </div>
 
-                <!-- Tarjeta: Condiciones Económicas -->
-                <div class="glass-card p-4 md:p-5">
+                <!-- Condiciones -->
+                <div class="glass-card p-4 lg:p-5">
                     <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3">
-                        <i class="ph-fill ph-briefcase text-brand-orange"></i> Alcance y Condiciones
+                        <i class="ph-fill ph-briefcase text-brand-orange"></i> Alcance Económico
                     </h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="input-group col-span-2 relative">
                             <label class="input-label">Monto Total</label>
                             <div class="relative">
                                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold font-display">USD</span>
-                                <input type="text" id="monto" class="input-field pl-12" placeholder="1,500" oninput="updatePreview()">
+                                <input type="text" inputmode="numeric" id="monto" class="input-field pl-12" placeholder="1.500" oninput="updatePreview()">
                             </div>
                         </div>
-                        <div class="input-group">
-                            <label class="input-label">Nº Publicaciones</label>
-                            <input type="text" id="n_pub" class="input-field" placeholder="Ej. 12" oninput="updatePreview()">
+                        <div class="input-group relative">
+                            <label class="input-label">Nº Publicaciones <span class="btn-na" onclick="setNA('n_pub')">N/A</span></label>
+                            <input type="text" inputmode="numeric" id="n_pub" class="input-field" placeholder="Ej. 12" oninput="updatePreview()">
                         </div>
-                        <div class="input-group">
-                            <label class="input-label">Nº Historias</label>
-                            <input type="text" id="n_his" class="input-field" placeholder="Ej. 8" oninput="updatePreview()">
+                        <div class="input-group relative">
+                            <label class="input-label">Nº Historias <span class="btn-na" onclick="setNA('n_his')">N/A</span></label>
+                            <input type="text" inputmode="numeric" id="n_his" class="input-field" placeholder="Ej. 8" oninput="updatePreview()">
                         </div>
-                        <div class="input-group">
-                            <label class="input-label">Rondas de Revisión</label>
-                            <input type="text" id="n_ron" class="input-field" placeholder="Ej. 2" oninput="updatePreview()">
+                        <div class="input-group relative">
+                            <label class="input-label">Rondas Revisión <span class="btn-na" onclick="setNA('n_ron')">N/A</span></label>
+                            <input type="text" inputmode="numeric" id="n_ron" class="input-field" placeholder="Ej. 2" oninput="updatePreview()">
                         </div>
                         <div class="input-group">
                             <label class="input-label">Interés Mora (%)</label>
-                            <input type="text" id="x_int" class="input-field" placeholder="Ej. 5" oninput="updatePreview()">
+                            <input type="text" inputmode="numeric" id="x_int" class="input-field" placeholder="Ej. 5" oninput="updatePreview()">
                         </div>
                     </div>
                 </div>
 
-                <!-- Tarjeta: Plazos Legales -->
-                <div class="glass-card p-4 md:p-5">
+                <!-- Plazos -->
+                <div class="glass-card p-4 lg:p-5">
                     <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3">
-                        <i class="ph-fill ph-hourglass-high text-brand-orange"></i> Plazos y Tiempos (Días hábiles)
+                        <i class="ph-fill ph-hourglass-high text-brand-orange"></i> Plazos (Días hábiles)
                     </h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="input-group">
                             <label class="input-label">Revisión Cliente</label>
-                            <input type="text" id="x_rev_ent" class="input-field" placeholder="Ej. 3" oninput="updatePreview()">
+                            <input type="text" inputmode="numeric" id="x_rev_ent" class="input-field" placeholder="Ej. 3" oninput="updatePreview()">
                         </div>
                         <div class="input-group">
                             <label class="input-label">Silencio/Tácita</label>
-                            <input type="text" id="x_sil" class="input-field" placeholder="Ej. 5" oninput="updatePreview()">
+                            <input type="text" inputmode="numeric" id="x_sil" class="input-field" placeholder="Ej. 5" oninput="updatePreview()">
                         </div>
                          <div class="input-group">
                             <label class="input-label">Max. Retraso</label>
-                            <input type="text" id="x_ret" class="input-field" placeholder="Ej. 10" oninput="updatePreview()">
+                            <input type="text" inputmode="numeric" id="x_ret" class="input-field" placeholder="Ej. 10" oninput="updatePreview()">
                         </div>
                         <div class="input-group">
                             <label class="input-label">Subsanar Resc.</label>
-                            <input type="text" id="x_sub" class="input-field" placeholder="Ej. 5" oninput="updatePreview()">
+                            <input type="text" inputmode="numeric" id="x_sub" class="input-field" placeholder="Ej. 5" oninput="updatePreview()">
                         </div>
                     </div>
                 </div>
 
-                <!-- Tarjeta: Cronograma -->
-                <div class="glass-card p-4 md:p-5">
+                <!-- Cronograma -->
+                <div class="glass-card p-4 lg:p-5">
                     <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3">
                         <i class="ph-fill ph-calendar-check text-brand-orange"></i> Cronograma de Hitos
                     </h2>
                     <div class="flex flex-col gap-3">
                         <div class="input-group">
-                            <label class="input-label">1. Reunión Inicial / Brief</label>
+                            <label class="input-label">1. Briefing <span class="btn-na" onclick="setNA('f1')">N/A</span></label>
                             <input type="text" id="f1" class="input-field" placeholder="Ej. 10 de Octubre" oninput="updatePreview()">
                         </div>
                         <div class="input-group">
-                            <label class="input-label">2. Entrega de Moodboard</label>
+                            <label class="input-label">2. Moodboard <span class="btn-na" onclick="setNA('f2')">N/A</span></label>
                             <input type="text" id="f2" class="input-field" placeholder="Ej. 15 de Octubre" oninput="updatePreview()">
                         </div>
                         <div class="input-group">
-                            <label class="input-label">3. Primeras Propuestas</label>
+                            <label class="input-label">3. 1ras Propuestas <span class="btn-na" onclick="setNA('f3')">N/A</span></label>
                             <input type="text" id="f3" class="input-field" placeholder="Ej. 22 de Octubre" oninput="updatePreview()">
                         </div>
                         <div class="input-group">
-                            <label class="input-label">4. Revisión del Cliente</label>
+                            <label class="input-label">4. Revisión <span class="btn-na" onclick="setNA('f4')">N/A</span></label>
                             <input type="text" id="f4" class="input-field" placeholder="Ej. Hasta el 25 de Octubre" oninput="updatePreview()">
                         </div>
                         <div class="input-group">
-                            <label class="input-label">5. Entrega Final</label>
+                            <label class="input-label">5. Entrega Final <span class="btn-na" onclick="setNA('f5')">N/A</span></label>
                             <input type="text" id="f5" class="input-field" placeholder="Ej. 30 de Octubre" oninput="updatePreview()">
                         </div>
                         <div class="input-group">
-                            <label class="input-label">6. Cierre del Proyecto</label>
+                            <label class="input-label">6. Cierre Proyecto <span class="btn-na" onclick="setNA('f6')">N/A</span></label>
                             <input type="text" id="f6" class="input-field" placeholder="Ej. 02 de Noviembre" oninput="updatePreview()">
                         </div>
                     </div>
                 </div>
 
-                <!-- Tarjeta: Jurisdicción -->
-                <div class="glass-card p-4 md:p-5">
+                <!-- Jurisdicción -->
+                <div class="glass-card p-4 lg:p-5">
                     <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3">
                         <i class="ph-fill ph-scales text-brand-orange"></i> Jurisdicción Legal
                     </h2>
@@ -494,12 +401,11 @@
             </form>
         </div>
 
-        <!-- Footer Sidebar (Boton Principal + Marca de agua) -->
-        <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-brand-surface via-brand-surface to-transparent z-20 pb-6">
-            <button onclick="scrollToDocument()" class="w-full bg-brand-orange hover:bg-brand-hover text-white py-3.5 rounded-xl font-bold transition-all shadow-glow hover:shadow-glow-hover flex justify-center items-center gap-2 group transform active:scale-[0.98]">
-                <i class="ph-bold ph-eye group-hover:animate-pulse"></i> Ver Documento
+        <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-brand-surface via-brand-surface to-transparent z-20 pb-6 pointer-events-none">
+            <button onclick="scrollToDocument()" class="w-full bg-brand-orange hover:bg-brand-hover text-white py-3.5 rounded-xl font-bold transition-all shadow-glow hover:shadow-glow-hover flex lg:hidden justify-center items-center gap-2 group transform active:scale-[0.98] pointer-events-auto">
+                <i class="ph-bold ph-eye group-hover:animate-pulse"></i> Ir al Documento
             </button>
-            <div class="mt-3 text-center text-[10px] text-gray-500 font-medium tracking-wide">
+            <div class="mt-2 text-center text-[10px] text-gray-500 font-medium tracking-wide">
                 POWERED BY <span class="text-brand-orange font-bold">@NECESITODISENOS</span>
             </div>
         </div>
@@ -508,21 +414,20 @@
     <!-- COLUMNA DERECHA: Vista Previa y Acciones -->
     <main id="mainPreviewArea" class="flex-1 h-full flex flex-col relative bg-brand-bg overflow-y-auto overflow-x-hidden scroll-smooth">
         
-        <!-- Elementos de Fondo -->
         <div class="absolute inset-0 bg-grid-pattern z-0 h-full"></div>
         <div class="bg-ambient-glow"></div>
         
-        <!-- Toolbar Flotante (Botones Separados) -->
+        <!-- Toolbar Flotante Avanzado -->
         <div class="sticky top-4 lg:top-6 z-40 w-full max-w-[850px] px-4 pointer-events-none mx-auto toolbar-actions transition-all duration-300">
-            <div class="bg-brand-card/90 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0 pointer-events-auto">
+            <div class="bg-brand-card/90 backdrop-blur-xl border border-white/10 rounded-2xl p-2.5 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0 pointer-events-auto">
                 
                 <div class="flex items-center gap-3 px-3 w-full sm:w-auto justify-between sm:justify-start">
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2" data-tooltip="El documento se actualiza automáticamente y puedes editarlo directo.">
                         <div class="relative flex h-2.5 w-2.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-orange"></span>
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-orange"></span>
                         </div>
-                        <span class="text-xs font-semibold text-gray-300 uppercase tracking-wider">Preview Activo</span>
+                        <span class="text-xs font-bold text-gray-300 tracking-wide uppercase">Vista Interactiva</span>
                     </div>
                     
                     <!-- Botones rápidos móviles -->
@@ -537,42 +442,41 @@
                     <button onclick="duplicateDocument()" class="hidden sm:flex hover:bg-white/10 text-gray-300 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors items-center gap-2">
                         <i class="ph-bold ph-copy text-lg"></i> Duplicar
                     </button>
-                    <button onclick="copyDocument()" class="hidden sm:flex hover:bg-white/10 text-gray-300 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors items-center gap-2">
+                    <button onclick="copyDocument()" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5">
                         <i class="ph-bold ph-clipboard-text text-lg"></i> Copiar
                     </button>
                     
                     <div class="hidden sm:block w-px h-5 bg-white/10 mx-1"></div>
                     
-                    <!-- Botones de Exportación Separados -->
-                    <button onclick="window.print()" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5">
-                        <i class="ph-bold ph-printer text-brand-orange text-lg"></i> Imprimir
+                    <button onclick="window.print()" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5" title="Imprimir">
+                        <i class="ph-bold ph-printer text-brand-orange text-lg"></i>
                     </button>
-                    <button onclick="generatePDF()" class="shrink-0 bg-brand-orange hover:bg-brand-hover text-white px-3.5 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 shadow-glow hover:shadow-glow-hover">
-                        <i class="ph-bold ph-file-pdf text-lg"></i> PDF
-                    </button>
-                    <button onclick="downloadDocument('txt')" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5">
+                    <button onclick="downloadDocument('txt')" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5" title="Descargar como TXT">
                         <i class="ph-bold ph-file-text text-brand-orange text-lg"></i> TXT
                     </button>
-                    <button onclick="downloadDocument('html')" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5">
-                        <i class="ph-bold ph-code text-brand-orange text-lg"></i> HTML
+                    <button onclick="generatePDF()" class="shrink-0 bg-brand-orange hover:bg-brand-hover text-white px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 shadow-glow hover:shadow-glow-hover ml-1">
+                        <i class="ph-bold ph-file-pdf text-lg"></i> Exportar PDF
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Contenedor del Documento -->
-        <div class="flex-1 px-4 md:px-10 flex justify-center document-wrapper z-10 pt-6 pb-24 lg:pt-10">
-            <!-- La Hoja (Editable) -->
+        <!-- Documento -->
+        <div class="flex-1 px-4 md:px-10 flex justify-center document-wrapper z-10 pt-4 pb-24 lg:pt-8">
             <div id="documentPreview" class="document-sheet shadow-sheet rounded-xl w-full max-w-[850px] min-h-[1000px] p-6 sm:p-12 md:p-16 whitespace-pre-wrap outline-none" contenteditable="true" spellcheck="false">
-                <!-- Contenido inyectado por JS -->
+                <!-- Inyectado por JS -->
             </div>
         </div>
+        
+        <!-- Botón flotante Mobile (Volver arriba) -->
+        <button onclick="scrollToForm()" class="mobile-fab lg:hidden fixed bottom-6 right-6 bg-brand-orange text-white p-4 rounded-full shadow-[0_10px_30px_rgba(255,69,0,0.5)] z-50 transform hover:scale-105 transition-transform">
+            <i class="ph-bold ph-list-dashes text-2xl"></i>
+        </button>
     </main>
 
     <!-- LÓGICA DE LA APLICACIÓN -->
     <script>
-        // --- 1. CONFIGURACIÓN Y PLANTILLA ---
-        
+        // --- 1. CONFIGURACIÓN ---
         const MAP = {
             'ciudad': { ph: '__CIUDAD__', fb: 'CIUDAD' },
             'dia': { ph: '__DIA__', fb: 'DÍA' },
@@ -603,153 +507,108 @@
             'c_jur': { ph: '__C_JUR__', fb: 'CIUDAD' }
         };
 
-        const TEMPLATE_BASE = `<b>CONTRATO DE PRESTACIÓN DE SERVICIOS DE DISEÑO GRÁFICO</b>
+        // Plantilla mejorada con divs para evitar saltos de página en PDF
+        const TEMPLATE_BASE = `<div class="clausula text-center font-bold text-lg mb-8 uppercase">Contrato de Prestación de Servicios de Diseño</div>
 
-En la ciudad de __CIUDAD__, a los __DIA__ días del mes de __MES__ de __ANO__, comparecen:
+<div class="clausula">En la ciudad de __CIUDAD__, a los __DIA__ días del mes de __MES__ de __ANO__, comparecen:
 <b>EL CLIENTE:</b> __C_NOMBRE__, con domicilio en __C_DOM__, identificado con __C_DOC__.
 <b>EL DISEÑADOR:</b> __D_NOMBRE__, con domicilio en __D_DOM__, identificado con __D_DOC__.
-Ambas partes acuerdan celebrar el presente contrato, el cual se regirá por las siguientes cláusulas:
+Ambas partes acuerdan celebrar el presente contrato, el cual se regirá por las siguientes cláusulas:</div>
 
-<b>CLÁUSULA PRIMERA – DEFINICIONES</b>
-A efectos del presente contrato, se entenderá por: a) 'Entregables': los archivos finales definidos en el alcance. b) 'Archivos fuente': los documentos editables en su formato nativo (ej. AI, PSD, FIG). c) 'Revisión': modificación solicitada por el CLIENTE que no altere el objeto inicial. d) 'Plazo hábil': aquellos días que no sean sábados, domingos ni feriados.
+<div class="clausula"><b>CLÁUSULA PRIMERA – DEFINICIONES</b>
+A efectos del presente contrato, se entenderá por: a) 'Entregables': los archivos finales definidos en el alcance. b) 'Archivos fuente': los documentos editables en su formato nativo (ej. AI, PSD, FIG). c) 'Revisión': modificación solicitada por el CLIENTE que no altere el objeto inicial. d) 'Plazo hábil': aquellos días que no sean sábados, domingos ni feriados.</div>
 
-<b>CLÁUSULA SEGUNDA – OBJETO</b>
-El DISEÑADOR se obliga a prestar al CLIENTE los servicios de diseño gráfico que consisten en el desarrollo de las piezas descritas en la sección 'ALCANCE Y ENTREGABLES'. Dichos servicios se ejecutarán con total autonomía técnica y creativa, dentro de los lineamientos acordados.
+<div class="clausula"><b>CLÁUSULA SEGUNDA – OBJETO</b>
+El DISEÑADOR se obliga a prestar al CLIENTE los servicios de diseño gráfico que consisten en el desarrollo de las piezas descritas en la sección 'ALCANCE Y ENTREGABLES'. Dichos servicios se ejecutarán con total autonomía técnica y creativa, dentro de los lineamientos acordados.</div>
 
-<b>CLÁUSULA SEGUNDA BIS – ALCANCE Y ENTREGABLES</b>
-Servicios incluidos.
-El DISEÑADOR se compromete a entregar al CLIENTE los siguientes materiales, según lo acordado en la propuesta y presupuesto:
+<div class="clausula"><b>CLÁUSULA SEGUNDA BIS – ALCANCE Y ENTREGABLES</b>
+Servicios incluidos:
+El DISEÑADOR se compromete a entregar al CLIENTE los siguientes materiales:
 a) Identidad visual: logotipo principal, variantes secundarias, paleta cromática y tipografías sugeridas.
 b) Manual de marca: documento en formato PDF que establezca normas de uso, aplicaciones y ejemplos de identidad.
 c) Piezas gráficas digitales: un mínimo de __N_PUB__ publicaciones y __N_HIS__ historias optimizadas para redes sociales.
-d) Adaptaciones básicas del logotipo en distintas disposiciones (horizontal, vertical e isotipo).
-e) Archivos finales en formatos listos para impresión y/o publicación digital (JPG/PNG en alta calidad, PDF con sangrado en caso de piezas impresas).
+d) Archivos finales en formatos listos para impresión y/o publicación digital.</div>
 
-Servicios excluidos.
-No forman parte del presente contrato, salvo acuerdo escrito posterior:
+<div class="clausula">Servicios excluidos:
 a) Archivos fuente editables (AI, PSD, FIG u otros).
-b) Compra de tipografías, imágenes, ilustraciones o música con licencia.
-c) Animaciones, videos o producción audiovisual.
-d) Desarrollo web o implementación digital.
-e) Impresión o producción física de materiales.
+b) Compra de tipografías, imágenes con licencia o música.
+c) Desarrollo web, impresión física o producción audiovisual.</div>
 
-Entregables parciales y finales.
-a) El DISEÑADOR presentará avances parciales (moodboards, bocetos, propuestas) en las fechas previstas en el cronograma.
-b) El CLIENTE deberá aprobar expresamente cada etapa para continuar a la siguiente.
-c) La entrega final se limitará a los archivos pactados en el punto 1.
+<div class="clausula">Entregables y revisión:
+a) El CLIENTE contará con __X_REV_ENT__ días hábiles para revisar y aceptar cada entregable. En caso de no emitir respuesta en ese plazo, se considerará aprobación tácita.</div>
 
-Forma de entrega.
-Todas las entregas se realizarán en formato digital mediante correo electrónico o enlaces a plataformas de almacenamiento en la nube (Google Drive, Dropbox, WeTransfer u otra acordada).
+<div class="clausula"><b>CLÁUSULA TERCERA – NATURALEZA DE LA RELACIÓN</b>
+Este contrato no constituye relación laboral, societaria ni de dependencia. El DISEÑADOR actuará como profesional independiente. El CLIENTE no tendrá obligación de proporcionar beneficios laborales.</div>
 
-Plazos de revisión.
-El CLIENTE contará con __X_REV_ENT__ días hábiles para revisar y aceptar cada entregable. En caso de no emitir respuesta en ese plazo, se considerará aprobación tácita.
-
-<b>CLÁUSULA TERCERA – NATURALEZA DE LA RELACIÓN</b>
-Este contrato no constituye relación laboral, societaria ni de dependencia. El DISEÑADOR actuará como profesional independiente, siendo responsable exclusivo de sus obligaciones fiscales, tributarias y de seguridad social. El CLIENTE no tendrá obligación alguna de proporcionar beneficios laborales, seguros ni prestaciones al DISEÑADOR.
-
-<b>CLÁUSULA CUARTA – HONORARIOS Y FORMA DE PAGO</b>
+<div class="clausula"><b>CLÁUSULA CUARTA – HONORARIOS Y FORMA DE PAGO</b>
 1. El valor total de los servicios asciende a USD __MONTO__.
 2. El CLIENTE abonará un anticipo equivalente al 50% del valor total, en concepto de seña no reembolsable.
 3. El saldo restante será abonado contra la entrega final de los entregables aprobados.
-4. En caso de mora, el CLIENTE abonará un interés del __X_INT__% mensual, además de los costos de cobranza.
-5. Cualquier gasto de transferencia o comisión bancaria será asumido por el CLIENTE.
+4. En caso de mora, el CLIENTE abonará un interés del __X_INT__% mensual, además de los costos de cobranza.</div>
 
-<b>CLÁUSULA QUINTA – PLAZOS Y CRONOGRAMA</b>
-El proyecto se desarrollará conforme al cronograma de trabajo. El retraso en la entrega de insumos o respuestas por parte del CLIENTE extenderá automáticamente los plazos previstos. Las fechas podrán ser ajustadas de mutuo acuerdo por escrito.
+<div class="clausula"><b>CLÁUSULA QUINTA – CRONOGRAMA DE TRABAJO</b>
+El desarrollo se organizará en fases, con los siguientes hitos y plazos estimados:
+• Reunión inicial / Brief: __F1__
+• Moodboard / Estilo: __F2__
+• Primeras propuestas: __F3__
+• Revisión y feedback: __F4__
+• Entrega final: __F5__
+• Cierre del proyecto: __F6__
 
-<b>CLÁUSULA QUINTA BIS – CRONOGRAMA DE TRABAJO</b>
-Etapas del proyecto.
-El desarrollo del proyecto se organizará en fases, con los siguientes hitos y plazos estimados:
-• Reunión inicial y entrega de brief: __F1__ – Responsable: CLIENTE y DISEÑADOR.
-• Moodboard / Propuesta de estilo: __F2__ – Responsable: DISEÑADOR.
-• Presentación de primeras propuestas: __F3__ – Responsable: DISEÑADOR.
-• Revisión y feedback del cliente: __F4__ – Responsable: CLIENTE.
-• Entrega de versión final de entregables: __F5__ – Responsable: DISEÑADOR.
-• Cierre y aprobación final del proyecto: __F6__ – Responsable: CLIENTE.
+Si el CLIENTE demorara más de __X_RET__ días hábiles en entregar insumos o feedback, el DISEÑADOR podrá reprogramar las fechas y/o aplicar un ajuste en honorarios por extensión del plazo.</div>
 
-Flexibilidad de plazos.
-Las fechas antes indicadas son estimativas y podrán ser modificadas de común acuerdo, debiendo el CLIENTE responder en tiempo y forma para no afectar la continuidad del trabajo.
+<div class="clausula"><b>CLÁUSULA SEXTA – REVISIÓN Y APROBACIÓN</b>
+1. El CLIENTE tendrá derecho a __N_RON__ rondas de revisión (cambios menores sobre el entregable presentado).
+2. Toda modificación que altere el alcance original será considerada 'cambio de alcance' y presupuestada independientemente.
+3. El silencio del CLIENTE por más de __X_SIL__ días hábiles tras recibir un entregable será considerado aceptación tácita.</div>
 
-Suspensión por retrasos.
-Si el CLIENTE demorara más de __X_RET__ días hábiles en entregar insumos o feedback, el DISEÑADOR podrá reprogramar las fechas y/o aplicar un ajuste en los honorarios por extensión del plazo.
+<div class="clausula"><b>CLÁUSULA SÉPTIMA – DERECHOS DE AUTOR</b>
+1. El DISEÑADOR conserva los derechos morales de autor.
+2. Los derechos patrimoniales de uso se transfieren al CLIENTE únicamente tras el pago total de los honorarios.
+3. El DISEÑADOR podrá utilizar el trabajo en su portafolio, salvo pacto expreso de confidencialidad.</div>
 
-<b>CLÁUSULA SEXTA – REVISIÓN Y APROBACIÓN</b>
-1. El CLIENTE tendrá derecho a __N_RON__ rondas de revisión.
-2. Se entiende por 'revisión' la solicitud de cambios menores sobre un entregable presentado. No se considerará revisión el planteo de modificaciones sustanciales.
-3. Toda solicitud de modificación que altere el alcance original será considerada 'cambio de alcance' y presupuestada de forma independiente.
-4. El silencio del CLIENTE por más de __X_SIL__ días hábiles tras recibir un entregable será considerado aceptación tácita.
+<div class="clausula"><b>CLÁUSULA OCTAVA – TERMINACIÓN Y LIMITACIÓN</b>
+Cualquiera de las partes podrá dar por terminado el contrato en caso de incumplimiento grave, previa notificación de __X_SUB__ días hábiles para subsanar. El CLIENTE podrá rescindir en cualquier momento, abonando al DISEÑADOR lo efectivamente trabajado. La responsabilidad del DISEÑADOR no excederá en ningún caso el monto abonado.</div>
 
-<b>CLÁUSULA SÉPTIMA – OBLIGACIONES DEL DISEÑADOR</b>
-El DISEÑADOR se compromete a:
-a) Ejecutar el trabajo con diligencia y profesionalismo.
-b) Cumplir con los plazos establecidos, salvo casos de fuerza mayor.
-c) Guardar confidencialidad respecto de la información proporcionada por el CLIENTE.
-d) Informar oportunamente sobre licencias de terceros que sean necesarias.
+<div class="clausula"><b>CLÁUSULA NOVENA – LEY APLICABLE</b>
+El presente contrato se regirá por las leyes de __PAIS__. Para cualquier controversia, las partes se someten a los tribunales ordinarios de __C_JUR__.</div>
 
-<b>CLÁUSULA OCTAVA – OBLIGACIONES DEL CLIENTE</b>
-El CLIENTE se obliga a:
-a) Proporcionar información, insumos y materiales de forma clara y en tiempo oportuno.
-b) Garantizar que posee derechos de uso sobre los materiales entregados.
-c) Responder en un plazo no mayor a __X_SIL__ días hábiles a las solicitudes del DISEÑADOR.
-d) Designar a un único interlocutor autorizado para validar entregas y revisiones.
-
-<b>CLÁUSULA NOVENA – DERECHOS DE AUTOR Y PROPIEDAD INTELECTUAL</b>
-1. El DISEÑADOR conserva en todo caso los derechos morales de autor.
-2. Los derechos patrimoniales de uso sobre los entregables se transfieren al CLIENTE únicamente tras el pago total de los honorarios.
-3. Los archivos fuente no forman parte de la entrega, salvo acuerdo expreso.
-4. El DISEÑADOR podrá utilizar el trabajo en su portafolio, salvo pacto expreso de confidencialidad.
-5. Cualquier uso distinto al pactado requerirá autorización adicional por escrito.
-
-<b>CLÁUSULA DÉCIMA – CONFIDENCIALIDAD Y PROTECCIÓN DE DATOS</b>
-El DISEÑADOR se obliga a mantener en estricta confidencialidad toda la información recibida del CLIENTE. Asimismo, se compromete a no divulgar ni utilizar dicha información con fines distintos a los del proyecto. El CLIENTE declara que cualquier dato personal que comparta se encuentra legitimado conforme a la normativa vigente de protección de datos.
-
-<b>CLÁUSULA DÉCIMO PRIMERA – SUBCONTRATACIÓN Y NO CAPTACIÓN</b>
-El DISEÑADOR podrá apoyarse en colaboradores o subcontratistas, asumiendo plena responsabilidad frente al CLIENTE. El CLIENTE no podrá contratar directa o indirectamente a dichos colaboradores por un plazo de 12 meses posteriores a la finalización del contrato, salvo autorización expresa.
-
-<b>CLÁUSULA DÉCIMO SEGUNDA – LIMITACIÓN DE RESPONSABILIDAD</b>
-La responsabilidad máxima del DISEÑADOR frente al CLIENTE no podrá exceder en ningún caso el monto efectivamente abonado en virtud del presente contrato. El DISEÑADOR no será responsable por fallos en servicios de impresión, errores de terceros, usos indebidos por parte del CLIENTE, ni por la suspensión de servicios digitales ajenos (ej. plataformas de redes sociales).
-
-<b>CLÁUSULA DÉCIMO TERCERA – TERMINACIÓN ANTICIPADA</b>
-Cualquiera de las partes podrá dar por terminado el presente contrato en caso de incumplimiento grave de la otra parte, previa notificación con un plazo de __X_SUB__ días hábiles para subsanar. El CLIENTE podrá rescindir en cualquier momento, abonando al DISEÑADOR lo efectivamente trabajado más un honorario de cancelación equivalente al 25–50% del saldo pendiente.
-
-<b>CLÁUSULA DÉCIMO CUARTA – FUERZA MAYOR</b>
-Ninguna de las partes será responsable por incumplimientos derivados de circunstancias de fuerza mayor, tales como desastres naturales, conflictos laborales, pandemias, cortes de servicios esenciales, bloqueos de plataformas digitales o disposiciones gubernamentales.
-
-<b>CLÁUSULA DÉCIMO QUINTA – RESOLUCIÓN DE CONFLICTOS</b>
-En caso de desacuerdo, las partes se obligan a intentar en primer lugar una solución amistosa. Si esto no fuera posible, someterán la controversia a un procedimiento de mediación o arbitraje antes de acudir a la vía judicial.
-
-<b>CLÁUSULA DÉCIMO SEXTA – LEY APLICABLE Y JURISDICCIÓN</b>
-El presente contrato se regirá por las leyes de __PAIS__. Para cualquier controversia, las partes se someten a los tribunales ordinarios de __C_JUR__, con renuncia expresa a cualquier otro fuero.
-
-<b>CLÁUSULA DÉCIMO SÉPTIMA – INTEGRIDAD</b>
-El presente contrato, junto con sus anexos, constituye el acuerdo íntegro entre las partes y deja sin efecto cualquier acuerdo previo, verbal o escrito.
-
-<b>FIRMAS:</b>
-
+<div class="clausula firma-box" style="margin-top: 50px;"><b>FIRMAS:</b><br><br><br>
 _______________________________        _______________________________
 <b>EL CLIENTE</b>                                       <b>EL DISEÑADOR</b>
 
 Nombre:                                          Nombre: 
 Documento:                                    Documento: 
-Fecha:                                             Fecha: `;
+Fecha:                                             Fecha: </div>`;
 
-        // --- 2. LÓGICA PRINCIPAL ---
-
+        // --- 2. ESTADOS Y LÓGICA ---
         const previewDiv = document.getElementById('documentPreview');
         const mainArea = document.getElementById('mainPreviewArea');
-        const LSK_DATA = 'contrato_saas_data_v3'; 
-        const LSK_HTML = 'contrato_saas_html_v3'; 
+        const LSK_DATA = 'contrato_saas_data_v4'; 
+        const LSK_HTML = 'contrato_saas_html_v4'; 
 
         document.addEventListener('DOMContentLoaded', () => {
             loadFromStorage();
             
+            // Listeners para actualizar barra de progreso al escribir
+            document.querySelectorAll('.input-field').forEach(input => {
+                input.addEventListener('input', () => {
+                    updateProgress();
+                    updatePreview();
+                });
+            });
+            
+            updateProgress();
+            
+            // Recuperar HTML manual si existía, o generar el base
             const savedHTML = localStorage.getItem(LSK_HTML);
-            if (savedHTML && savedHTML.trim() !== '') {
+            if (savedHTML && savedHTML.trim() !== '' && savedHTML !== "null") {
                 previewDiv.innerHTML = savedHTML;
             } else {
                 updatePreview(false);
             }
 
+            // Guardar cambios manuales en el div si se escribe directo en él
             previewDiv.addEventListener('input', () => {
                 localStorage.setItem(LSK_HTML, previewDiv.innerHTML);
             });
@@ -767,7 +626,7 @@ Fecha:                                             Fecha: `;
                     
                     const replacement = val 
                         ? `<span class="contract-filled">${val}</span>` 
-                        : `<span class="contract-placeholder" onclick="document.getElementById('${inputId}').focus()" title="Haz clic para completar">${config.fb}</span>`;
+                        : `<span class="contract-placeholder" onclick="focusInput('${inputId}')" title="Completar campo">${config.fb}</span>`;
                     
                     content = content.split(config.ph).join(replacement);
                 }
@@ -781,6 +640,19 @@ Fecha:                                             Fecha: `;
             previewDiv.innerHTML = content;
         }
 
+        // Progreso
+        function updateProgress() {
+            let filled = 0;
+            const total = Object.keys(MAP).length;
+            for (const key of Object.keys(MAP)) {
+                if (document.getElementById(key).value.trim() !== '') filled++;
+            }
+            const percent = Math.round((filled / total) * 100);
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            document.getElementById('progressText').innerText = `${filled}/${total} CAMPOS LISTOS`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+        }
+
         function loadFromStorage() {
             try {
                 const saved = localStorage.getItem(LSK_DATA);
@@ -791,119 +663,105 @@ Fecha:                                             Fecha: `;
                         if (input) input.value = val;
                     }
                 }
-            } catch (e) {
-                console.error("Error cargando storage:", e);
+            } catch (e) { console.error("Error", e); }
+        }
+
+        // --- 3. ACCIONES DE BOTONES Y UTILIDADES ---
+
+        function focusInput(id) {
+            scrollToForm();
+            const el = document.getElementById(id);
+            if(el) {
+                el.focus();
+                el.parentElement.classList.add('ring-1', 'ring-brand-orange');
+                setTimeout(() => el.parentElement.classList.remove('ring-1', 'ring-brand-orange'), 1000);
             }
         }
 
-        // --- 3. ACCIONES Y UTILIDADES ---
+        function setNA(id) {
+            const input = document.getElementById(id);
+            if(input) {
+                input.value = "N/A";
+                updatePreview();
+                updateProgress();
+            }
+        }
+
+        function scrollToForm() {
+            if(window.innerWidth < 1024) {
+                document.querySelector('aside').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
 
         function scrollToDocument() {
-            // Scroll en móviles (menores a 1024px)
             if(window.innerWidth < 1024) {
                 mainArea.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                focusDocument();
             }
-        }
-
-        function focusDocument() {
-            updatePreview();
-            previewDiv.focus();
-            
-            previewDiv.classList.add('ring-2', 'ring-brand-orange');
-            setTimeout(() => previewDiv.classList.remove('ring-2', 'ring-brand-orange'), 1000);
-            
-            showCustomToast("Modo edición activado", "Puedes escribir directamente sobre el documento.");
         }
 
         function resetForm() {
-            if(confirm("¿Estás seguro de limpiar todos los datos del formulario y el documento?")) {
+            if(confirm("¿Seguro de limpiar todo el formulario y el documento?")) {
                 document.getElementById('contractForm').reset();
                 localStorage.removeItem(LSK_DATA);
                 localStorage.removeItem(LSK_HTML);
                 updatePreview();
-                showCustomToast("Limpieza exitosa", "Formulario y contrato han sido reseteados.");
+                updateProgress();
+                showCustomToast("Limpieza exitosa", "Formulario reseteado.");
             }
-        }
-
-        function duplicateDocument() {
-            const currentHTML = previewDiv.innerHTML;
-            const separator = `\n\n<div style="width: 100%; border-top: 2px dashed rgba(255, 69, 0, 0.4); margin: 4rem 0;"></div>\n<div style="text-align: center; color: #FF4500; font-weight: bold; font-size: 1.2rem; margin-bottom: 3rem; letter-spacing: 0.1em;">COPIA 2 (EDITABLE)</div>\n\n`;
-            
-            let baseHTML = currentHTML;
-            if (currentHTML.includes('COPIA 2')) {
-                baseHTML = currentHTML.split('<div style="width: 100%; border-top: 2px dashed')[0];
-            }
-
-            previewDiv.innerHTML = baseHTML + separator + baseHTML;
-            localStorage.setItem(LSK_HTML, previewDiv.innerHTML); 
-            
-            mainArea.scrollTo({ top: mainArea.scrollHeight, behavior: 'smooth'});
-            showCustomToast("Documento Duplicado", "Se agregó una copia al final de la hoja.");
         }
 
         function copyDocument() {
+            // Método estándar tradicional para mejor soporte en iFrames/Canvas
             const textToCopy = previewDiv.innerText;
             const textarea = document.createElement('textarea');
             textarea.value = textToCopy;
             document.body.appendChild(textarea);
             textarea.select();
-            
             try {
                 document.execCommand('copy');
                 showCustomToast("Texto Copiado", "El contrato se copió a tu portapapeles.");
             } catch (err) {
-                showCustomToast("Error", "No se pudo copiar el texto.");
+                showCustomToast("Error", "No se pudo copiar. Selecciona el texto manualmente.");
             }
             document.body.removeChild(textarea);
         }
 
         // GENERACIÓN DE PDF REAL CON HTML2PDF
         function generatePDF() {
-            showCustomToast("Generando PDF", "Preparando el documento, aguarda unos segundos...");
+            showCustomToast("Generando PDF", "Procesando documento A4...");
             
-            const date = new Date().toISOString().split('T')[0];
+            const date = document.getElementById('dia').value ? document.getElementById('ano').value : new Date().toISOString().split('T')[0];
             const element = previewDiv.cloneNode(true);
             
-            // Limpiar estilos interactivos para el PDF final
+            // Limpiar estilos para PDF
             const placeholders = element.querySelectorAll('.contract-placeholder');
-            placeholders.forEach(p => {
-                p.style.border = 'none';
-                p.style.background = 'transparent';
-                p.style.color = '#666';
-            });
+            placeholders.forEach(p => { p.style.border = 'none'; p.style.background = 'transparent'; p.style.color = '#666'; });
             const filled = element.querySelectorAll('.contract-filled');
-            filled.forEach(f => {
-                f.style.color = '#000';
-                f.style.borderBottom = 'none';
-                f.style.fontWeight = '600';
-            });
+            filled.forEach(f => { f.style.color = '#000'; f.style.borderBottom = 'none'; f.style.fontWeight = '600'; });
 
-            // Contenedor temporal para formateo A4 PDF
             const optWrapper = document.createElement('div');
             optWrapper.style.backgroundColor = '#ffffff';
             optWrapper.style.color = '#000000';
-            optWrapper.style.padding = '30px';
-            optWrapper.style.fontFamily = 'Helvetica, Arial, sans-serif';
+            optWrapper.style.padding = '20px 30px';
+            optWrapper.style.fontFamily = 'Arial, sans-serif';
             optWrapper.style.fontSize = '12px';
             optWrapper.style.lineHeight = '1.6';
-            optWrapper.style.whiteSpace = 'pre-wrap';
             optWrapper.innerHTML = element.innerHTML;
 
+            // Opciones cruciales para evitar cortes de párrafo
             const opt = {
                 margin:       15,
                 filename:     `Contrato_Diseno_${date}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
             html2pdf().set(opt).from(optWrapper).save().then(() => {
-                showCustomToast("¡PDF Descargado!", "Tu archivo PDF está listo.");
+                showCustomToast("¡PDF Listo!", "Descarga completada.");
             }).catch(err => {
-                console.error(err);
-                showCustomToast("Error", "Hubo un problema al generar el PDF.");
+                showCustomToast("Error PDF", "Intenta usar la opción Imprimir > Guardar como PDF.");
             });
         }
 
@@ -914,16 +772,8 @@ Fecha:                                             Fecha: `;
             if (type === 'txt') {
                 content = previewDiv.innerText;
                 blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-                filename = `Contrato_Diseno_${date}.txt`;
-                showCustomToast("Descargando TXT", "Tu archivo de texto plano está listo.");
-            } else if (type === 'html') {
-                let cleanHTML = previewDiv.innerHTML.replace(/class="contract-filled"/g, 'style="font-weight: 600; color: #000;"');
-                cleanHTML = cleanHTML.replace(/class="contract-placeholder"[^>]*>([^<]*)<\/span>/g, '<span style="color: #666;">[$1]</span>');
-
-                content = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Contrato de Diseño Gráfico</title><style>@page { margin: 2.5cm; } body { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #111; background: #fff; max-width: 800px; margin: 0 auto; padding: 40px; font-size: 11pt; text-align: left; white-space: pre-wrap; } b { font-weight: 600; color: #000; }</style></head><body>${cleanHTML}</body></html>`;
-                blob = new Blob([content], { type: 'text/html;charset=utf-8' });
-                filename = `Contrato_Diseno_${date}.html`;
-                showCustomToast("Descargando HTML", "Tu archivo imprimible está listo.");
+                filename = `Contrato_${date}.txt`;
+                showCustomToast("Descargando TXT", "Archivo de texto plano listo.");
             }
 
             const url = window.URL.createObjectURL(blob);
@@ -936,7 +786,7 @@ Fecha:                                             Fecha: `;
             window.URL.revokeObjectURL(url);
         }
 
-        // Sistema de Toast
+        // Toast Handler
         let toastTimeout;
         function showCustomToast(title, msg) {
             const toast = document.getElementById('toast');
@@ -951,7 +801,7 @@ Fecha:                                             Fecha: `;
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('translate-y-0', 'opacity-100');
                 toast.classList.add('-translate-y-24', 'opacity-0');
-            }, 4000);
+            }, 3500);
         }
     </script>
 </body>
