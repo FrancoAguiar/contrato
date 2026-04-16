@@ -208,7 +208,7 @@
         /* ESTILOS PARA IMPRESIÓN DIRECTA / PDF NATIVO */
         @media print {
             body, html { background: white !important; height: auto !important; overflow: auto !important; }
-            aside, .bg-grid-pattern, .bg-ambient-glow, .web-watermark, .toolbar-actions, #toast, .mobile-fab, #confirmModal, #adminReviewView { display: none !important; }
+            aside, .bg-grid-pattern, .bg-ambient-glow, .web-watermark, .toolbar-actions, #toast, .mobile-fab, #confirmModal, #adminReviewView, .banner-integrado, #exportModal, #topPromoBanner { display: none !important; }
             main { background: white !important; height: auto !important; overflow: visible !important; display: block !important; }
             .document-wrapper { padding: 0 !important; margin: 0 !important; display: block !important; }
             #documentPreview {
@@ -223,7 +223,59 @@
         }
     </style>
 </head>
-<body class="bg-brand-bg text-gray-300 font-sans flex flex-col lg:flex-row h-[100dvh] overflow-hidden selection:bg-brand-primary/30 selection:text-white relative">
+<body class="bg-brand-bg text-gray-300 font-sans flex flex-col h-[100dvh] overflow-hidden selection:bg-brand-primary/30 selection:text-white relative">
+
+    <!-- MODAL DE EXPORTACIÓN Y UPSELL -->
+    <div id="exportModal" class="fixed inset-0 z-[100000] hidden items-center justify-center bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0 p-4">
+        <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-[500px] shadow-2xl transform scale-95 transition-transform duration-300 overflow-hidden relative">
+
+            <!-- ESTADO 1: CARGANDO -->
+            <div id="exportLoadingState" class="flex flex-col items-center justify-center p-12 text-center">
+                <div class="w-16 h-16 relative flex items-center justify-center mb-6">
+                    <div class="absolute inset-0 border-[3px] border-white/5 rounded-full"></div>
+                    <div class="absolute inset-0 border-[3px] border-brand-primary rounded-full border-t-transparent animate-spin"></div>
+                    <i class="ph-fill ph-file-pdf text-brand-primary text-xl absolute"></i>
+                </div>
+                <h3 class="text-xl font-display font-bold text-white mb-2">Generando contrato...</h3>
+                <p class="text-gray-400 text-sm">Por favor esperá unos segundos.</p>
+            </div>
+
+            <!-- ESTADO 2: UPSELL OFERTA -->
+            <div id="exportUpsellState" class="hidden flex-col p-8">
+                <div class="text-center mb-6">
+                    <i class="ph-fill ph-check-circle text-brand-primary text-4xl mb-3 animate-pulse"></i>
+                    <h3 class="text-2xl font-display font-bold text-white mb-1 uppercase tracking-tight">¡Contrato generado!</h3>
+                    <p class="text-brand-primary font-medium text-sm tracking-wider uppercase">Descarga completada</p>
+                </div>
+
+                <!-- Tarjeta Nativa de Factura -->
+                <div class="w-full bg-[#121212] border border-brand-primary/20 rounded-xl flex flex-col items-center text-center p-6 relative overflow-hidden group cursor-pointer" onclick="window.open('https://www.necesitodisenos.com/factura', '_blank')">
+                    <!-- Efecto hover sutil -->
+                    <div class="absolute inset-0 w-full h-full pointer-events-none">
+                        <div class="absolute top-0 left-[-100%] w-1/2 h-full bg-gradient-to-r from-transparent via-brand-primary/5 to-transparent skew-x-12 transition-transform duration-1000 group-hover:translate-x-[300%]"></div>
+                    </div>
+
+                    <!-- Icono cohesivo -->
+                    <div class="w-12 h-12 bg-brand-primary/10 rounded-full flex items-center justify-center border border-brand-primary/20 shrink-0 mb-4 transition-transform group-hover:scale-110">
+                        <i class="ph-fill ph-receipt text-brand-primary text-2xl"></i>
+                    </div>
+                    
+                    <h4 class="text-white font-bold text-base mb-2">Pero...</br>¿Cómo vas a cobrar el 50% de anticipo?</h4>
+                    <p class="text-sm text-gray-400 mb-6 leading-relaxed">No mandes un mensaje de texto suelto. Mandá una factura profesional que asegure tu pago hoy mismo.</p>
+
+                    <!-- Botón primario sólido -->
+                    <a href="https://www.necesitodisenos.com/factura" target="_blank" class="w-full bg-brand-primary hover:bg-brand-hover text-black px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 shadow-glow hover:shadow-glow-hover hover:-translate-y-0.5">
+                        QUIERO EL GENERADOR DE FACTURAS <i class="ph-bold ph-arrow-right text-base"></i>
+                    </a>
+                </div>
+
+                <button onclick="closeExportModal()" class="mt-5 py-2 text-gray-500 hover:text-white text-xs font-bold transition-colors w-full uppercase tracking-widest">
+                    Cerrar ventana
+                </button>
+            </div>
+
+        </div>
+    </div>
 
     <!-- OVERLAY OCULTO: VISTA DE ADMINISTRADOR PARA GENERAR IMAGEN -->
     <div id="adminReviewView" class="fixed inset-0 bg-[#0A0A0A] z-[99999] hidden flex-col items-center justify-center p-4">
@@ -313,344 +365,403 @@
         </div>
     </div>
 
-    <!-- COLUMNA IZQUIERDA: Formulario -->
-    <aside id="sidebarPanel" class="w-full lg:w-[480px] h-[100dvh] lg:h-full flex flex-col bg-brand-surface border-r border-brand-border z-20 shadow-2xl relative shrink-0">
-        
-        <header class="p-5 lg:p-6 border-b border-brand-border bg-brand-surface/95 backdrop-blur z-10 shrink-0 flex flex-col gap-4">
-            <div class="flex justify-between items-start relative" id="notifContainer">
-                <div class="flex flex-col gap-1.5">
-                    <h1 class="text-xl lg:text-2xl font-display font-bold text-white flex items-center gap-2 tracking-tight">
-                        <div class="bg-brand-primary p-1.5 rounded-lg shadow-glow animate-float">
-                            <i class="ph-bold ph-pen-nib text-black text-base lg:text-lg"></i>
-                        </div>
-                        Contrato<span class="text-brand-primary">Pro</span>
-                    </h1>
-                    <p class="text-xs text-gray-400 font-medium ml-1">Generador de Contrato para diseñadores</p>
-                </div>
+    <!-- WRAPPER PRINCIPAL APP (Envuelve Sidebar + Preview para no romper el flex-row) -->
+    <div class="flex-1 flex flex-col lg:flex-row w-full overflow-hidden relative">
+
+        <!-- COLUMNA IZQUIERDA: Formulario -->
+        <aside id="sidebarPanel" class="w-full lg:w-[480px] h-full flex flex-col bg-brand-surface border-r border-brand-border z-20 shadow-2xl relative shrink-0">
+            
+            <header class="p-5 lg:p-6 border-b border-brand-border bg-brand-surface/95 backdrop-blur z-10 shrink-0 flex flex-col gap-4">
                 
-                <div class="flex items-center gap-2">
-                    <!-- Botón de Notificación y Dropdown -->
-                    <div class="relative">
-                        <button onclick="toggleNotification()" class="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors relative group" title="Notificaciones">
-                            <i id="bellIcon" class="ph-fill ph-bell-ringing text-[22px] animate-ring text-brand-primary group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.5)] transition-all"></i>
-                            <span id="notifBadge" class="absolute top-1.5 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 ring-2 ring-brand-surface text-[9px] font-bold text-white shadow-[0_0_15px_rgba(239,68,68,0.8)]">1</span>
+                <!-- TITULO Y ACCIONES DE CABECERA -->
+                <div class="flex items-center justify-between relative">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-brand-primary/10 rounded-xl flex items-center justify-center border border-brand-primary/20">
+                            <i class="ph-fill ph-file-text text-brand-primary text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-display font-bold text-xl text-white tracking-tight leading-none">Contrato<span class="text-brand-primary">Editable™</span></h1>
+                            <span class="text-[10px] text-gray-400 font-medium tracking-widest uppercase">Generador Legal</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <!-- Limpiar -->
+                        <button onclick="openConfirmModal()" class="p-2.5 bg-black/40 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-400 hover:text-red-400 rounded-xl transition-all" title="Limpiar y restaurar documento">
+                            <i class="ph ph-trash text-lg"></i>
                         </button>
 
-                        <!-- Dropdown de Reseña -->
-                        <div id="notifDropdown" class="absolute top-full right-0 mt-3 w-80 lg:w-[340px] bg-[#18181B]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-[100] transform opacity-0 scale-95 pointer-events-none transition-all duration-200 origin-top-right">
-                            <div class="absolute -top-1.5 right-4 w-3 h-3 bg-[#18181B] border-t border-l border-white/10 transform rotate-45"></div>
+                        <!-- Notificaciones / Opinión -->
+                        <div class="relative" id="notifContainer">
+                            <button onclick="toggleNotification()" class="relative p-2.5 bg-black/40 hover:bg-black/60 border border-white/10 rounded-xl transition-all group">
+                                <i id="bellIcon" class="ph-fill ph-bell-ringing text-brand-primary animate-ring text-lg transition-colors"></i>
+                                <span id="notifBadge" class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-[#121212]"></span>
+                            </button>
 
-                            <div class="p-4 border-b border-white/5 relative z-10 bg-gradient-to-b from-brand-primary/5 to-transparent rounded-t-xl">
-                                <h4 class="font-display font-bold text-white text-base flex items-center gap-2">
-                                    <i class="ph-fill ph-star text-brand-primary"></i> ¡Nos importa tu opinión!
-                                </h4>
-                                <p class="text-xs text-gray-400 mt-1.5 leading-relaxed">Ayúdanos a mejorar ContratoPro. Cuéntanos qué te parece hasta ahora.</p>
-                            </div>
-                            
-                            <div class="p-4 relative z-10" id="reviewFormContainer">
-                                <form id="reviewForm" onsubmit="submitReview(event)" class="flex flex-col gap-4">
-                                    <div class="flex flex-col items-center gap-1">
-                                        <span class="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Tu calificación</span>
-                                        <div class="flex justify-center gap-2" id="starRating">
-                                            <button type="button" onclick="setRating(1)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
-                                            <button type="button" onclick="setRating(2)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
-                                            <button type="button" onclick="setRating(3)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
-                                            <button type="button" onclick="setRating(4)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
-                                            <button type="button" onclick="setRating(5)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
-                                        </div>
-                                        <input type="hidden" id="ratingValue" value="0">
-                                    </div>
-                                    
-                                    <div class="h-px w-full bg-white/5"></div>
-
-                                    <div class="flex flex-col gap-3">
-                                        <div class="relative group">
-                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <i class="ph ph-instagram-logo text-gray-400 text-lg group-focus-within:text-brand-primary transition-colors"></i>
-                                            </div>
-                                            <input type="text" id="reviewIg" name="instagram" class="w-full bg-black/40 border border-white/10 rounded-lg pl-10 p-2.5 text-sm text-white placeholder-gray-500 focus:border-brand-primary focus:bg-black/60 outline-none transition-all shadow-inner" placeholder="Tu Instagram (Ej: @necesitodisenos)">
-                                        </div>
-                                        <div class="relative group">
-                                            <textarea id="reviewText" name="review" class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white placeholder-gray-500 focus:border-brand-primary focus:bg-black/60 outline-none resize-none h-24 transition-all shadow-inner" placeholder="¿Qué te pareció la plantilla? ¡Cuéntanos!" required></textarea>
-                                        </div>
-                                    </div>
-                                    
-                                    <button type="submit" class="w-full bg-gradient-to-r from-brand-primary to-emerald-500 hover:from-brand-hover hover:to-emerald-600 text-black font-extrabold text-xs py-3 rounded-lg transition-all shadow-glow hover:shadow-glow-hover mt-1 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide">
-                                        Enviar Reseña
-                                    </button>
-                                </form>
-                            </div>
-
-                            <div id="reviewSuccess" class="p-8 text-center hidden relative z-10 flex-col items-center justify-center min-h-[250px]">
-                                <div class="w-16 h-16 bg-brand-primary/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-primary/30 shadow-[0_0_30px_rgba(34,197,94,0.3)]">
-                                    <i class="ph-bold ph-check text-brand-primary text-3xl"></i>
+                            <!-- Dropdown Notificaciones con el Formulario Adentro -->
+                            <div id="notifDropdown" class="absolute top-full mt-3 right-0 w-[320px] bg-[#121212] border border-[#262626] rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7)] opacity-0 scale-95 pointer-events-none transition-all duration-300 origin-top-right z-[100]">
+                                
+                                <div class="p-4 border-b border-white/5 relative z-10 bg-gradient-to-b from-brand-primary/5 to-transparent rounded-t-xl">
+                                    <h4 class="font-display font-bold text-white text-base flex items-center gap-2">
+                                        <i class="ph-fill ph-star text-brand-primary"></i> ¡Nos importa tu opinión!
+                                    </h4>
+                                    <p class="text-xs text-gray-400 mt-1.5 leading-relaxed">Ayúdanos a mejorar ContratoPro. Cuéntanos qué te parece hasta ahora.</p>
                                 </div>
-                                <h4 class="font-bold text-white text-lg font-display mb-1">¡Mil gracias!</h4>
-                                <p class="text-sm text-gray-400">Tu opinión nos ayuda a seguir creando herramientas increíbles.</p>
+                                
+                                <div class="p-4 relative z-10" id="reviewFormContainer">
+                                    <form id="reviewForm" onsubmit="submitReview(event)" class="flex flex-col gap-4">
+                                        <div class="flex flex-col items-center gap-1">
+                                            <span class="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Tu calificación</span>
+                                            <div class="flex justify-center gap-2" id="starRating">
+                                                <button type="button" onclick="setRating(1)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
+                                                <button type="button" onclick="setRating(2)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
+                                                <button type="button" onclick="setRating(3)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
+                                                <button type="button" onclick="setRating(4)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
+                                                <button type="button" onclick="setRating(5)" class="star-btn text-gray-600 hover:text-yellow-400 transition-all transform hover:scale-110"><i class="ph-fill ph-star text-3xl drop-shadow-md"></i></button>
+                                            </div>
+                                            <input type="hidden" id="ratingValue" value="0">
+                                        </div>
+                                        
+                                        <div class="h-px w-full bg-white/5"></div>
+
+                                        <div class="flex flex-col gap-3">
+                                            <div class="relative group">
+                                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <i class="ph ph-instagram-logo text-gray-400 text-lg group-focus-within:text-brand-primary transition-colors"></i>
+                                                </div>
+                                                <input type="text" id="reviewIg" name="instagram" class="w-full bg-black/40 border border-white/10 rounded-lg pl-10 p-2.5 text-sm text-white placeholder-gray-500 focus:border-brand-primary focus:bg-black/60 outline-none transition-all shadow-inner" placeholder="Tu Instagram (Ej: @necesitodisenos)">
+                                            </div>
+                                            <div class="relative group">
+                                                <textarea id="reviewText" name="review" class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white placeholder-gray-500 focus:border-brand-primary focus:bg-black/60 outline-none resize-none h-24 transition-all shadow-inner" placeholder="¿Qué te pareció la plantilla? ¡Cuéntanos!" required></textarea>
+                                            </div>
+                                        </div>
+                                        
+                                        <button type="submit" class="w-full bg-gradient-to-r from-brand-primary to-emerald-500 hover:from-brand-hover hover:to-emerald-600 text-black font-extrabold text-xs py-3 rounded-lg transition-all shadow-glow hover:shadow-glow-hover mt-1 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide">
+                                            Enviar Reseña
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <div id="reviewSuccess" class="p-8 text-center hidden relative z-10 flex-col items-center justify-center min-h-[250px]">
+                                    <div class="w-16 h-16 bg-brand-primary/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-primary/30 shadow-[0_0_30px_rgba(34,197,94,0.3)]">
+                                        <i class="ph-bold ph-check text-brand-primary text-3xl"></i>
+                                    </div>
+                                    <h4 class="font-bold text-white text-lg font-display mb-1">¡Mil gracias!</h4>
+                                    <p class="text-sm text-gray-400">Tu opinión nos ayuda a seguir creando herramientas increíbles.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Progreso -->
+                <div class="w-full bg-[#18181B] rounded-full h-1.5 border border-white/5 relative overflow-hidden mt-1">
+                    <div id="progressBar" class="bg-brand-primary h-1.5 rounded-full transition-all duration-500 ease-out shadow-glow" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between items-center text-[10px] font-bold text-gray-500 uppercase tracking-wider font-poppins">
+                    <span id="progressText">0/27 CAMPOS LISTOS</span>
+                    <span class="text-brand-primary" id="progressPercent">0%</span>
+                </div>
+            </header>
+
+            <div id="formScrollArea" class="flex-1 overflow-y-auto p-5 lg:p-6 hide-scrollbar relative pb-24 lg:pb-6">
+                <form id="contractForm" class="flex flex-col gap-6 font-sans">
+                    <!-- Emisión -->
+                    <div class="glass-card p-4 lg:p-5">
+                        <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
+                            <i class="ph-fill ph-calendar-blank text-brand-primary"></i> Detalles de Emisión
+                        </h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="input-group col-span-2">
+                                <label class="input-label">Ciudad de Emisión</label>
+                                <input type="text" id="ciudad" class="input-field" placeholder="Ej. Buenos Aires">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Día</label>
+                                <input type="text" inputmode="numeric" id="dia" class="input-field" placeholder="Ej. 15">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Mes</label>
+                                <input type="text" id="mes" class="input-field" placeholder="Ej. Octubre">
+                            </div>
+                            <div class="input-group col-span-2">
+                                <label class="input-label">Año</label>
+                                <input type="text" inputmode="numeric" id="ano" class="input-field" placeholder="Ej. 2024">
                             </div>
                         </div>
                     </div>
 
-                    <button onclick="openConfirmModal()" class="p-2 text-gray-400 hover:text-red-400 hover:bg-white/5 rounded-lg transition-colors" title="Limpiar y restaurar documento">
-                        <i class="ph ph-trash text-xl"></i>
-                    </button>
+                    <!-- Cliente -->
+                    <div class="glass-card p-4 lg:p-5">
+                        <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
+                            <i class="ph-fill ph-buildings text-brand-primary"></i> Datos del Cliente
+                        </h2>
+                        <div class="flex flex-col gap-4">
+                            <div class="input-group">
+                                <label class="input-label">Nombre o Razón Social</label>
+                                <input type="text" id="c_nombre" class="input-field" placeholder="Ej. Empresa S.A">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Documento / NIT / CUIT</label>
+                                <input type="text" id="c_doc" class="input-field" placeholder="Ej. 30-12345678-9">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Domicilio Completo</label>
+                                <input type="text" id="c_dom" class="input-field" placeholder="Calle Falsa 123, Ciudad">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diseñador -->
+                    <div class="glass-card p-4 lg:p-5">
+                        <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
+                            <i class="ph-fill ph-pen-nib text-brand-primary"></i> Datos del Diseñador
+                        </h2>
+                        <div class="flex flex-col gap-4">
+                            <div class="input-group">
+                                <label class="input-label">Nombre o Estudio</label>
+                                <input type="text" id="d_nombre" class="input-field" placeholder="Tu Nombre o Agencia">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Documento / ID</label>
+                                <input type="text" id="d_doc" class="input-field" placeholder="Tu número de identificación">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Domicilio Comercial</label>
+                                <input type="text" id="d_dom" class="input-field" placeholder="Tu dirección comercial">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Condiciones -->
+                    <div class="glass-card p-4 lg:p-5">
+                        <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
+                            <i class="ph-fill ph-briefcase text-brand-primary"></i> Alcance Económico
+                        </h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="input-group col-span-2 relative">
+                                <label class="input-label">Monto Total</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-primary font-bold font-display opacity-80">USD</span>
+                                    <input type="text" inputmode="decimal" id="monto" class="input-field pl-12" placeholder="1.500">
+                                </div>
+                            </div>
+                            <div class="input-group relative">
+                                <label class="input-label">Nº Publicaciones <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('n_pub')">N/A</span></label>
+                                <input type="text" inputmode="numeric" id="n_pub" class="input-field" placeholder="Ej. 12">
+                            </div>
+                            <div class="input-group relative">
+                                <label class="input-label">Nº Historias <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('n_his')">N/A</span></label>
+                                <input type="text" inputmode="numeric" id="n_his" class="input-field" placeholder="Ej. 8">
+                            </div>
+                            <div class="input-group relative">
+                                <label class="input-label">Rondas Revisión <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('n_ron')">N/A</span></label>
+                                <input type="text" inputmode="numeric" id="n_ron" class="input-field" placeholder="Ej. 2">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Interés Mora (%)</label>
+                                <input type="text" inputmode="decimal" id="x_int" class="input-field" placeholder="Ej. 5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plazos -->
+                    <div class="glass-card p-4 lg:p-5">
+                        <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
+                            <i class="ph-fill ph-hourglass-high text-brand-primary"></i> Plazos (Días hábiles)
+                        </h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="input-group">
+                                <label class="input-label">Revisión Cliente</label>
+                                <input type="text" inputmode="numeric" id="x_rev_ent" class="input-field" placeholder="Ej. 3">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Silencio/Tácita</label>
+                                <input type="text" inputmode="numeric" id="x_sil" class="input-field" placeholder="Ej. 5">
+                            </div>
+                             <div class="input-group">
+                                <label class="input-label">Max. Retraso</label>
+                                <input type="text" inputmode="numeric" id="x_ret" class="input-field" placeholder="Ej. 10">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Subsanar Resc.</label>
+                                <input type="text" inputmode="numeric" id="x_sub" class="input-field" placeholder="Ej. 5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cronograma -->
+                    <div class="glass-card p-4 lg:p-5">
+                        <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
+                            <i class="ph-fill ph-calendar-check text-brand-primary"></i> Cronograma de Hitos
+                        </h2>
+                        <div class="flex flex-col gap-3">
+                            <div class="input-group">
+                                <label class="input-label">1. Briefing <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f1')">N/A</span></label>
+                                <input type="text" id="f1" class="input-field" placeholder="Ej. 10 de Octubre">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">2. Moodboard <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f2')">N/A</span></label>
+                                <input type="text" id="f2" class="input-field" placeholder="Ej. 15 de Octubre">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">3. 1ras Propuestas <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f3')">N/A</span></label>
+                                <input type="text" id="f3" class="input-field" placeholder="Ej. 22 de Octubre">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">4. Revisión <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f4')">N/A</span></label>
+                                <input type="text" id="f4" class="input-field" placeholder="Ej. Hasta el 25 de Octubre">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">5. Entrega Final <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f5')">N/A</span></label>
+                                <input type="text" id="f5" class="input-field" placeholder="Ej. 30 de Octubre">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">6. Cierre Proyecto <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f6')">N/A</span></label>
+                                <input type="text" id="f6" class="input-field" placeholder="Ej. 02 de Noviembre">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Jurisdicción -->
+                    <div class="glass-card p-4 lg:p-5">
+                        <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
+                            <i class="ph-fill ph-scales text-brand-primary"></i> Jurisdicción Legal
+                        </h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="input-group">
+                                <label class="input-label">País</label>
+                                <input type="text" id="pais" class="input-field" placeholder="Ej. Argentina">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Ciudad / Tribunales</label>
+                                <input type="text" id="c_jur" class="input-field" placeholder="Ej. CABA">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="mt-8 pt-4 border-t border-brand-border flex justify-center items-center select-none w-full opacity-80 pb-2">
+                    <span class="text-[#737373] text-[11px] font-semibold tracking-[0.15em] font-poppins">CREADO POR</span>
+                    <span class="text-brand-primary text-[11px] font-bold tracking-[0.15em] ml-1.5 font-poppins">@NECESITODISENOS</span>
+                </div>
+            </div>
+
+            <button onclick="showDocMobile()" class="mobile-fab bg-brand-primary text-black shadow-glow">
+                <i class="ph-bold ph-eye text-xl"></i> <span>Ver Doc</span>
+            </button>
+        </aside>
+
+        <!-- COLUMNA DERECHA: Vista Previa y Acciones -->
+        <main id="mainPreviewArea" class="flex-1 h-full flex-col relative bg-brand-bg overflow-y-auto overflow-x-hidden scroll-smooth" style="display: none;">
+            
+            <div class="absolute inset-0 bg-grid-pattern z-0 h-full"></div>
+            <div class="bg-ambient-glow"></div>
+            
+            <!-- BANNER PROMOCIONAL SUPERIOR (Calculadora) MOVIDO ARRIBA -->
+            <div class="w-full max-w-[850px] px-4 mx-auto mt-4 lg:mt-6 relative z-10">
+                <div id="topPromoBanner" class="w-full bg-[#121212] border border-brand-primary/20 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 p-6 shadow-xl relative overflow-hidden group banner-integrado">
+                    <!-- Efecto hover (brillo) -->
+                    <div class="absolute inset-0 w-full h-full pointer-events-none">
+                        <div class="absolute top-0 left-[-100%] w-1/2 h-full bg-gradient-to-r from-transparent via-brand-primary/5 to-transparent skew-x-12 transition-transform duration-1000 group-hover:translate-x-[300%]"></div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 relative z-10 text-center sm:text-left">
+                        <!-- Icono cohesivo -->
+                        <div class="w-12 h-12 bg-brand-primary/10 rounded-full flex items-center justify-center shrink-0 border border-brand-primary/20 transition-transform group-hover:scale-110">
+                            <i class="ph-fill ph-calculator text-brand-primary text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-base sm:text-lg mb-1">¿Estás cobrando bien este proyecto?</h4>
+                            <p class="text-xs sm:text-sm text-gray-400">Definí tu tarifa por hora y presupuesto exacto antes de enviarlo.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Botón primario sólido -->
+                    <a href="https://www.necesitodisenos.com/calculadora" target="_blank" class="relative z-10 shrink-0 bg-brand-primary hover:bg-brand-hover text-black px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 w-full sm:w-auto text-center flex items-center justify-center gap-2 shadow-glow hover:shadow-glow-hover hover:-translate-y-0.5">
+                        USAR CALCULADORA <i class="ph-bold ph-arrow-right text-base"></i>
+                    </a>
                 </div>
             </div>
             
-            <div class="w-full bg-[#18181B] rounded-full h-1.5 border border-white/5 relative overflow-hidden">
-                <div id="progressBar" class="bg-brand-primary h-1.5 rounded-full transition-all duration-500 ease-out shadow-glow" style="width: 0%"></div>
-            </div>
-            <div class="flex justify-between items-center text-[10px] font-bold text-gray-500 uppercase tracking-wider font-poppins">
-                <span id="progressText">0/27 CAMPOS LISTOS</span>
-                <span class="text-brand-primary" id="progressPercent">0%</span>
-            </div>
-        </header>
-
-        <div id="formScrollArea" class="flex-1 overflow-y-auto p-5 lg:p-6 hide-scrollbar relative pb-24 lg:pb-6">
-            <form id="contractForm" class="flex flex-col gap-6 font-sans">
-                <!-- Emisión -->
-                <div class="glass-card p-4 lg:p-5">
-                    <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
-                        <i class="ph-fill ph-calendar-blank text-brand-primary"></i> Detalles de Emisión
-                    </h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="input-group col-span-2">
-                            <label class="input-label">Ciudad de Emisión</label>
-                            <input type="text" id="ciudad" class="input-field" placeholder="Ej. Buenos Aires">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Día</label>
-                            <input type="text" inputmode="numeric" id="dia" class="input-field" placeholder="Ej. 15">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Mes</label>
-                            <input type="text" id="mes" class="input-field" placeholder="Ej. Octubre">
-                        </div>
-                        <div class="input-group col-span-2">
-                            <label class="input-label">Año</label>
-                            <input type="text" inputmode="numeric" id="ano" class="input-field" placeholder="Ej. 2024">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cliente -->
-                <div class="glass-card p-4 lg:p-5">
-                    <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
-                        <i class="ph-fill ph-buildings text-brand-primary"></i> Datos del Cliente
-                    </h2>
-                    <div class="flex flex-col gap-4">
-                        <div class="input-group">
-                            <label class="input-label">Nombre o Razón Social</label>
-                            <input type="text" id="c_nombre" class="input-field" placeholder="Ej. Empresa S.A">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Documento / NIT / CUIT</label>
-                            <input type="text" id="c_doc" class="input-field" placeholder="Ej. 30-12345678-9">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Domicilio Completo</label>
-                            <input type="text" id="c_dom" class="input-field" placeholder="Calle Falsa 123, Ciudad">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Diseñador -->
-                <div class="glass-card p-4 lg:p-5">
-                    <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
-                        <i class="ph-fill ph-pen-nib text-brand-primary"></i> Datos del Diseñador
-                    </h2>
-                    <div class="flex flex-col gap-4">
-                        <div class="input-group">
-                            <label class="input-label">Nombre o Estudio</label>
-                            <input type="text" id="d_nombre" class="input-field" placeholder="Tu Nombre o Agencia">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Documento / ID</label>
-                            <input type="text" id="d_doc" class="input-field" placeholder="Tu número de identificación">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Domicilio Comercial</label>
-                            <input type="text" id="d_dom" class="input-field" placeholder="Tu dirección comercial">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Condiciones -->
-                <div class="glass-card p-4 lg:p-5">
-                    <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
-                        <i class="ph-fill ph-briefcase text-brand-primary"></i> Alcance Económico
-                    </h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="input-group col-span-2 relative">
-                            <label class="input-label">Monto Total</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-primary font-bold font-display opacity-80">USD</span>
-                                <input type="text" inputmode="decimal" id="monto" class="input-field pl-12" placeholder="1.500">
+            <div class="sticky top-4 lg:top-6 z-40 w-full max-w-[850px] px-4 pointer-events-none mx-auto toolbar-actions transition-all duration-300 mt-4 lg:mt-6">
+                <div class="bg-[#121212]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-2.5 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0 pointer-events-auto">
+                    
+                    <div class="flex items-center gap-3 px-3 w-full sm:w-auto justify-between sm:justify-start">
+                        <div class="flex items-center gap-2" data-tooltip="El texto es editable libremente. Clic en las áreas verdes para volver al form.">
+                            <div class="relative flex h-2.5 w-2.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-primary"></span>
                             </div>
+                            <span class="text-xs font-bold text-gray-300 tracking-wide uppercase font-poppins">Vista Interactiva</span>
                         </div>
-                        <div class="input-group relative">
-                            <label class="input-label">Nº Publicaciones <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('n_pub')">N/A</span></label>
-                            <input type="text" inputmode="numeric" id="n_pub" class="input-field" placeholder="Ej. 12">
-                        </div>
-                        <div class="input-group relative">
-                            <label class="input-label">Nº Historias <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('n_his')">N/A</span></label>
-                            <input type="text" inputmode="numeric" id="n_his" class="input-field" placeholder="Ej. 8">
-                        </div>
-                        <div class="input-group relative">
-                            <label class="input-label">Rondas Revisión <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('n_ron')">N/A</span></label>
-                            <input type="text" inputmode="numeric" id="n_ron" class="input-field" placeholder="Ej. 2">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Interés Mora (%)</label>
-                            <input type="text" inputmode="decimal" id="x_int" class="input-field" placeholder="Ej. 5">
+                        
+                        <div class="flex sm:hidden items-center gap-1">
+                            <button onclick="duplicateDocument()" class="p-2 text-gray-400 hover:text-brand-primary hover:bg-white/10 rounded-lg"><i class="ph-bold ph-copy text-lg"></i></button>
+                            <button onclick="copyDocument()" class="p-2 text-gray-400 hover:text-brand-primary hover:bg-white/10 rounded-lg"><i class="ph-bold ph-clipboard-text text-lg"></i></button>
                         </div>
                     </div>
-                </div>
-
-                <!-- Plazos -->
-                <div class="glass-card p-4 lg:p-5">
-                    <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
-                        <i class="ph-fill ph-hourglass-high text-brand-primary"></i> Plazos (Días hábiles)
-                    </h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="input-group">
-                            <label class="input-label">Revisión Cliente</label>
-                            <input type="text" inputmode="numeric" id="x_rev_ent" class="input-field" placeholder="Ej. 3">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Silencio/Tácita</label>
-                            <input type="text" inputmode="numeric" id="x_sil" class="input-field" placeholder="Ej. 5">
-                        </div>
-                         <div class="input-group">
-                            <label class="input-label">Max. Retraso</label>
-                            <input type="text" inputmode="numeric" id="x_ret" class="input-field" placeholder="Ej. 10">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Subsanar Resc.</label>
-                            <input type="text" inputmode="numeric" id="x_sub" class="input-field" placeholder="Ej. 5">
-                        </div>
+                    
+                    <div class="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto hide-scrollbar pb-1 sm:pb-0 px-1 font-poppins">
+                        <button onclick="duplicateDocument()" class="hidden sm:flex hover:bg-white/10 text-gray-300 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors items-center gap-2">
+                            <i class="ph-bold ph-copy text-lg text-brand-primary"></i> Duplicar
+                        </button>
+                        <button onclick="copyDocument()" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5">
+                            <i class="ph-bold ph-clipboard-text text-lg text-brand-primary"></i> Copiar
+                        </button>
+                        
+                        <div class="hidden sm:block w-px h-5 bg-white/10 mx-1"></div>
+                        
+                        <button onclick="triggerExportAction('print')" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5" title="Imprimir Directo">
+                            <i class="ph-bold ph-printer text-brand-primary text-lg"></i>
+                        </button>
+                        <button onclick="downloadDocument('txt')" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5" title="Descargar como TXT">
+                            <i class="ph-bold ph-file-text text-brand-primary text-lg"></i> TXT
+                        </button>
+                        <button id="btnPDF" onclick="triggerExportAction('pdf')" class="shrink-0 bg-brand-primary hover:bg-brand-hover text-black px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 shadow-glow hover:shadow-glow-hover ml-1">
+                            <i class="ph-bold ph-file-pdf text-lg"></i> <span class="hidden sm:inline">Exportar PDF</span>
+                        </button>
                     </div>
                 </div>
-
-                <!-- Cronograma -->
-                <div class="glass-card p-4 lg:p-5">
-                    <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
-                        <i class="ph-fill ph-calendar-check text-brand-primary"></i> Cronograma de Hitos
-                    </h2>
-                    <div class="flex flex-col gap-3">
-                        <div class="input-group">
-                            <label class="input-label">1. Briefing <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f1')">N/A</span></label>
-                            <input type="text" id="f1" class="input-field" placeholder="Ej. 10 de Octubre">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">2. Moodboard <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f2')">N/A</span></label>
-                            <input type="text" id="f2" class="input-field" placeholder="Ej. 15 de Octubre">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">3. 1ras Propuestas <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f3')">N/A</span></label>
-                            <input type="text" id="f3" class="input-field" placeholder="Ej. 22 de Octubre">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">4. Revisión <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f4')">N/A</span></label>
-                            <input type="text" id="f4" class="input-field" placeholder="Ej. Hasta el 25 de Octubre">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">5. Entrega Final <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f5')">N/A</span></label>
-                            <input type="text" id="f5" class="input-field" placeholder="Ej. 30 de Octubre">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">6. Cierre Proyecto <span class="btn-na" onclick="event.preventDefault(); event.stopPropagation(); setNA('f6')">N/A</span></label>
-                            <input type="text" id="f6" class="input-field" placeholder="Ej. 02 de Noviembre">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Jurisdicción -->
-                <div class="glass-card p-4 lg:p-5">
-                    <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-white/5 pb-3 font-display">
-                        <i class="ph-fill ph-scales text-brand-primary"></i> Jurisdicción Legal
-                    </h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="input-group">
-                            <label class="input-label">País</label>
-                            <input type="text" id="pais" class="input-field" placeholder="Ej. Argentina">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Ciudad / Tribunales</label>
-                            <input type="text" id="c_jur" class="input-field" placeholder="Ej. CABA">
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-            <div class="mt-8 pt-4 border-t border-brand-border flex justify-center items-center select-none w-full opacity-80 pb-2">
-                <span class="text-[#737373] text-[11px] font-semibold tracking-[0.15em] font-poppins">CREADO POR</span>
-                <span class="text-brand-primary text-[11px] font-bold tracking-[0.15em] ml-1.5 font-poppins">@NECESITODISENOS</span>
             </div>
-        </div>
 
-        <button onclick="showDocMobile()" class="mobile-fab bg-brand-primary text-black shadow-glow">
-            <i class="ph-bold ph-eye text-xl"></i> <span>Ver Doc</span>
-        </button>
-    </aside>
-
-    <!-- COLUMNA DERECHA: Vista Previa y Acciones -->
-    <main id="mainPreviewArea" class="flex-1 h-[100dvh] lg:h-full flex-col relative bg-brand-bg overflow-y-auto overflow-x-hidden scroll-smooth" style="display: none;">
-        
-        <div class="absolute inset-0 bg-grid-pattern z-0 h-full"></div>
-        <div class="bg-ambient-glow"></div>
-        
-        <div class="sticky top-4 lg:top-6 z-40 w-full max-w-[850px] px-4 pointer-events-none mx-auto toolbar-actions transition-all duration-300">
-            <div class="bg-[#121212]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-2.5 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0 pointer-events-auto">
+            <div class="flex-1 px-4 md:px-10 flex flex-col items-center document-wrapper z-10 pt-4 pb-24 lg:pt-6">
                 
-                <div class="flex items-center gap-3 px-3 w-full sm:w-auto justify-between sm:justify-start">
-                    <div class="flex items-center gap-2" data-tooltip="El texto es editable libremente. Clic en las áreas verdes para volver al form.">
-                        <div class="relative flex h-2.5 w-2.5">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-primary"></span>
-                        </div>
-                        <span class="text-xs font-bold text-gray-300 tracking-wide uppercase font-poppins">Vista Interactiva</span>
-                    </div>
-                    
-                    <div class="flex sm:hidden items-center gap-1">
-                        <button onclick="duplicateDocument()" class="p-2 text-gray-400 hover:text-brand-primary hover:bg-white/10 rounded-lg"><i class="ph-bold ph-copy text-lg"></i></button>
-                        <button onclick="copyDocument()" class="p-2 text-gray-400 hover:text-brand-primary hover:bg-white/10 rounded-lg"><i class="ph-bold ph-clipboard-text text-lg"></i></button>
-                    </div>
+                <div id="documentPreview" class="document-sheet shadow-sheet rounded-xl w-full max-w-[850px] min-h-[1000px] p-6 sm:p-12 md:p-16 whitespace-pre-wrap outline-none mb-8" contenteditable="true" spellcheck="false">
+                    <!-- Se inyecta la plantilla inicial mediante JS -->
                 </div>
-                
-                <div class="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto hide-scrollbar pb-1 sm:pb-0 px-1 font-poppins">
-                    <button onclick="duplicateDocument()" class="hidden sm:flex hover:bg-white/10 text-gray-300 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors items-center gap-2">
-                        <i class="ph-bold ph-copy text-lg text-brand-primary"></i> Duplicar
-                    </button>
-                    <button onclick="copyDocument()" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5">
-                        <i class="ph-bold ph-clipboard-text text-lg text-brand-primary"></i> Copiar
-                    </button>
-                    
-                    <div class="hidden sm:block w-px h-5 bg-white/10 mx-1"></div>
-                    
-                    <button onclick="window.print()" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5" title="Imprimir Directo">
-                        <i class="ph-bold ph-printer text-brand-primary text-lg"></i>
-                    </button>
-                    <button onclick="downloadDocument('txt')" class="shrink-0 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5" title="Descargar como TXT">
-                        <i class="ph-bold ph-file-text text-brand-primary text-lg"></i> TXT
-                    </button>
-                    <button id="btnPDF" onclick="generatePDF()" class="shrink-0 bg-brand-primary hover:bg-brand-hover text-black px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 shadow-glow hover:shadow-glow-hover ml-1">
-                        <i class="ph-bold ph-file-pdf text-lg"></i> <span class="hidden sm:inline">Exportar PDF</span>
-                    </button>
-                </div>
-            </div>
-        </div>
 
-        <div class="flex-1 px-4 md:px-10 flex justify-center document-wrapper z-10 pt-4 pb-24 lg:pt-8">
-            <div id="documentPreview" class="document-sheet shadow-sheet rounded-xl w-full max-w-[850px] min-h-[1000px] p-6 sm:p-12 md:p-16 whitespace-pre-wrap outline-none" contenteditable="true" spellcheck="false">
-                <!-- Se inyecta la plantilla inicial mediante JS -->
+                <!-- BANNER INFERIOR INTEGRADO (Agencia - Orgánico) -->
+                <div class="w-full max-w-[850px] bg-[#121212] border border-brand-primary/20 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 p-6 shadow-xl relative overflow-hidden group banner-integrado mt-4 mb-8">
+                    <!-- Efecto hover (brillo) -->
+                    <div class="absolute inset-0 w-full h-full pointer-events-none">
+                        <div class="absolute top-0 left-[-100%] w-1/2 h-full bg-gradient-to-r from-transparent via-brand-primary/5 to-transparent skew-x-12 transition-transform duration-1000 group-hover:translate-x-[300%]"></div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 relative z-10 text-center sm:text-left">
+                        <!-- Icono cohesivo -->
+                        <div class="w-12 h-12 bg-brand-primary/10 rounded-full flex items-center justify-center shrink-0 border border-brand-primary/20 transition-transform group-hover:scale-110">
+                            <i class="ph-fill ph-rocket-launch text-brand-primary text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-base sm:text-lg mb-1">Pasá de Freelancer a <span class="text-brand-primary">DUEÑO de AGENCIA</span></h4>
+                            <p class="text-xs sm:text-sm text-gray-400">El método exacto para facturar +$1.000 USD por semana y conseguir clientes premium.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Botón primario sólido -->
+                    <a href="https://www.necesitodisenos.com/mapa" target="_blank" class="relative z-10 shrink-0 bg-brand-primary hover:bg-brand-hover text-black px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 w-full sm:w-auto text-center flex items-center justify-center gap-2 shadow-glow hover:shadow-glow-hover hover:-translate-y-0.5">
+                        QUIERO ESCALAR <i class="ph-bold ph-arrow-right text-base"></i>
+                    </a>
+                </div>
             </div>
-        </div>
+            
+            <button onclick="showFormMobile()" class="mobile-fab bg-[#262626] border border-white/10 text-white">
+                <i class="ph-bold ph-pencil-simple text-brand-primary text-xl"></i> <span>Editar</span>
+            </button>
+        </main>
         
-        <button onclick="showFormMobile()" class="mobile-fab bg-[#262626] border border-white/10 text-white">
-            <i class="ph-bold ph-pencil-simple text-brand-primary text-xl"></i> <span>Editar</span>
-        </button>
-    </main>
+    </div> <!-- FIN WRAPPER PRINCIPAL -->
 
     <!-- LÓGICA DE LA APLICACIÓN -->
     <script>
@@ -910,7 +1021,7 @@ Si el CLIENTE demorara más de <span data-id="x_ret" class="contract-placeholder
 
 <div class="clausula"><b>CLÁUSULA SEXTA – REVISIÓN Y APROBACIÓN</b>
 1. El CLIENTE tendrá derecho a <span data-id="n_ron" class="contract-placeholder" onclick="focusInput('n_ron')" contenteditable="false">N</span> rondas de revisión (cambios menores sobre el entregable presentado).
-2. Toda modificación modification que altere el alcance original será considerada 'cambio de alcance'.
+2. Toda modificación que altere el alcance original será considerada 'cambio de alcance'.
 3. El silencio del CLIENTE por más de <span data-id="x_sil" class="contract-placeholder" onclick="focusInput('x_sil')" contenteditable="false">X</span> días hábiles tras recibir un entregable será considerado aceptación tácita.</div>
 
 <div class="clausula"><b>CLÁUSULA SÉPTIMA – DERECHOS DE AUTOR</b>
@@ -1151,11 +1262,59 @@ El presente contrato se regirá por las leyes de <span data-id="pais" class="con
             }
         }
 
-        function generatePDF() {
-            const btn = document.getElementById('btnPDF');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-lg"></i> <span class="hidden sm:inline">Procesando...</span>`;
-            showCustomToast("Generando PDF", "Calculando saltos de página...");
+        // --- Lógica del Modal Exportar / Upsell ---
+        function triggerExportAction(type) {
+            const modal = document.getElementById('exportModal');
+            const loadingState = document.getElementById('exportLoadingState');
+            const upsellState = document.getElementById('exportUpsellState');
+
+            // Reset States
+            loadingState.classList.remove('hidden');
+            loadingState.classList.add('flex');
+            upsellState.classList.add('hidden');
+            upsellState.classList.remove('flex');
+
+            // Mostrar el Modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.firstElementChild.classList.remove('scale-95');
+                modal.firstElementChild.classList.add('scale-100');
+            }, 10);
+
+            // Temporizador de 1.2s para la "carga" y luego el Upsell
+            setTimeout(() => {
+                // Cambiar la vista
+                loadingState.classList.add('hidden');
+                loadingState.classList.remove('flex');
+                upsellState.classList.remove('hidden');
+                upsellState.classList.add('flex');
+
+                // Ejecutar la acción subyacente
+                if (type === 'pdf') {
+                    executePDF();
+                } else if (type === 'print') {
+                    // Timeout sutil para que el navegador no bloquee el DOM inmediatamente
+                    setTimeout(() => { window.print(); }, 100);
+                }
+            }, 1200);
+        }
+
+        function closeExportModal() {
+            const modal = document.getElementById('exportModal');
+            modal.classList.add('opacity-0');
+            modal.firstElementChild.classList.remove('scale-100');
+            modal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Renombrado a executePDF (antiguamente generatePDF)
+        function executePDF() {
+            showCustomToast("Generando PDF", "Calculando saltos de página en segundo plano...");
             
             const day = document.getElementById('dia').value;
             const month = document.getElementById('mes').value;
@@ -1188,10 +1347,8 @@ El presente contrato se regirá por las leyes de <span data-id="pais" class="con
             };
 
             html2pdf().set(opt).from(optWrapper).save().then(() => {
-                btn.innerHTML = originalHTML;
                 showCustomToast("¡PDF Listo!", "Revisa tu carpeta de descargas.");
             }).catch(err => {
-                btn.innerHTML = originalHTML;
                 showCustomToast("Error PDF", "Usa el botón Imprimir > Guardar como PDF como alternativa.");
             });
         }
