@@ -53,6 +53,7 @@
                         'pulse-primary': 'pulsePrimary 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'float': 'float 5s ease-in-out infinite',
                         'ring': 'ring 2s ease-in-out infinite',
+                        'warning-pulse': 'warningPulse 2s infinite',
                     },
                     keyframes: {
                         pulsePrimary: {
@@ -68,6 +69,10 @@
                             '10%, 30%, 50%': { transform: 'rotate(15deg)' },
                             '20%, 40%': { transform: 'rotate(-15deg)' },
                             '60%': { transform: 'rotate(0deg)' }
+                        },
+                        warningPulse: {
+                            '0%, 100%': { boxShadow: '0 0 0 0 rgba(239, 68, 68, 0.7)' },
+                            '70%': { boxShadow: '0 0 0 10px rgba(239, 68, 68, 0)' }
                         }
                     }
                 }
@@ -208,7 +213,7 @@
         /* ESTILOS PARA IMPRESIÓN DIRECTA / PDF NATIVO */
         @media print {
             body, html { background: white !important; height: auto !important; overflow: auto !important; }
-            aside, .bg-grid-pattern, .bg-ambient-glow, .web-watermark, .toolbar-actions, #toast, .mobile-fab, #confirmModal, #adminReviewView, .banner-integrado, #exportModal, #topPromoBanner, #statusBanner { display: none !important; }
+            aside, .bg-grid-pattern, .bg-ambient-glow, .web-watermark, .toolbar-actions, #toast, .mobile-fab, #confirmModal, #adminReviewView, .banner-integrado, #exportModal, #topPromoBanner, #statusBanner, #igWarningModal { display: none !important; }
             main { background: white !important; height: auto !important; overflow: visible !important; display: block !important; }
             .document-wrapper { padding: 0 !important; margin: 0 !important; display: block !important; }
             #documentPreview {
@@ -274,6 +279,51 @@
                 </button>
             </div>
 
+        </div>
+    </div>
+
+    <!-- MODAL AVISO INSTAGRAM (Una sola vez por persona) -->
+    <div id="igWarningModal" class="fixed inset-0 z-[100000] hidden items-center justify-center bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0 p-4">
+        <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-[420px] shadow-2xl transform scale-95 transition-transform duration-300 overflow-hidden relative flex flex-col p-6 sm:p-8">
+            
+            <!-- Icono superior limpio -->
+            <div class="w-16 h-16 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-5 border border-brand-primary/20 shadow-glow relative">
+                <i class="ph-fill ph-instagram-logo text-brand-primary text-3xl"></i>
+                <!-- Puntito rojo sutil de alerta -->
+                <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-brand-card animate-pulse"></div>
+            </div>
+
+            <!-- Textos alineados a la marca -->
+            <div class="text-center">
+                <h3 class="text-2xl font-display font-bold text-white mb-2 tracking-tight">Nuevo Instagram</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                    Nos bajaron la cuenta principal. Mientras intentamos recuperarla, estamos usando una nueva para no perder el contacto con vos.
+                </p>
+            </div>
+
+            <!-- Caja de usuario elegante -->
+            <div class="w-full bg-black/40 border border-white/5 rounded-xl p-4 mb-6 flex items-center justify-between hover:bg-black/60 transition-colors">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-fuchsia-600 rounded-full p-[2px] shrink-0">
+                        <div class="w-full h-full bg-brand-card rounded-full flex items-center justify-center">
+                            <i class="ph-fill ph-instagram-logo text-white text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Seguinos acá</p>
+                        <p class="text-white font-bold text-sm tracking-wide">@necesitodisenos.ok</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Botón primario verde integrado -->
+            <a href="https://www.instagram.com/necesitodisenos.ok/" target="_blank" onclick="closeIgWarningModal()" class="w-full bg-brand-primary hover:bg-brand-hover text-black font-bold text-sm py-3.5 rounded-xl shadow-glow hover:shadow-glow-hover hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 uppercase tracking-wide mb-4">
+                IR AL PERFIL <i class="ph-bold ph-arrow-right text-lg"></i>
+            </a>
+            
+            <button onclick="closeIgWarningModal()" class="text-gray-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors w-full text-center">
+                Ya los sigo / Cerrar
+            </button>
         </div>
     </div>
 
@@ -365,16 +415,18 @@
         </div>
     </div>
 
-    <!-- BANNER DE AVISO (CUENTA SUSPENDIDA) -->
-    <div id="statusBanner" class="bg-[#111] border-b border-white/5 text-gray-300 py-2.5 px-4 z-[500] flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 shrink-0 w-full relative transition-all duration-300">
-        <span class="flex items-center gap-2 text-xs font-medium tracking-wide">
-            <span class="text-base">⚠️</span>
-            Estamos restableciendo nuestra cuenta principal de Instagram (@necesitodisenos).
+    <!-- BANNER DE AVISO HEADER (NUEVA CUENTA) - ELEGANTE Y COHERENTE -->
+    <div id="statusBanner" class="bg-brand-surface border-b border-brand-border text-gray-300 py-3 px-4 z-[500] flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4 shrink-0 w-full relative transition-all duration-300 shadow-md">
+        <span class="flex flex-col sm:flex-row items-center gap-2 text-xs sm:text-sm font-medium tracking-wide text-center">
+            <span class="flex items-center gap-2">
+                <i class="ph-fill ph-warning-circle text-brand-primary text-lg animate-pulse"></i>
+                <span>¡Nos bajaron la cuenta! Usamos esta nueva mientras tanto:</span>
+            </span>
+            <a href="https://www.instagram.com/necesitodisenos.ok/" target="_blank" class="text-white font-bold hover:text-brand-primary transition-colors border-b border-white/20 hover:border-brand-primary pb-[1px] ml-1 flex items-center gap-1.5">
+                <i class="ph-fill ph-instagram-logo text-base text-brand-primary"></i> @necesitodisenos.ok
+            </a>
         </span>
-        <span class="text-xs text-gray-400 font-medium tracking-wide">
-            ¿Necesitás soporte? <a href="mailto:necesitodisenos@gmail.com" class="text-white hover:text-brand-primary underline decoration-white/30 transition-colors ml-1 font-bold">Escribinos por mail</a>.
-        </span>
-        <button onclick="document.getElementById('statusBanner').style.display='none'" class="absolute right-3 sm:right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full p-1">
+        <button onclick="document.getElementById('statusBanner').style.display='none'" class="absolute right-4 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full p-1.5">
             <i class="ph-bold ph-x text-xs"></i>
         </button>
     </div>
@@ -833,23 +885,19 @@
                         }
                     }
 
-                    // Fallback visual: SILUETA GRIS DE INSTAGRAM (Sin letras verdes)
+                    // Fallback visual: SILUETA GRIS DE INSTAGRAM
                     function generateIGBlankAvatar() {
                         const canvas = document.createElement('canvas');
                         canvas.width = 150; canvas.height = 150;
                         const ctx = canvas.getContext('2d');
                         
-                        // Fondo gris claro
                         ctx.fillStyle = '#DBDBDB'; 
                         ctx.fillRect(0,0,150,150);
                         
-                        // Silueta blanca
                         ctx.fillStyle = '#FFFFFF';
-                        // Cabeza
                         ctx.beginPath(); 
                         ctx.arc(75, 55, 30, 0, Math.PI * 2); 
                         ctx.fill();
-                        // Cuerpo
                         ctx.beginPath(); 
                         ctx.arc(75, 165, 70, Math.PI, 0); 
                         ctx.fill();
@@ -877,19 +925,18 @@
                                 
                                 if (res.ok) {
                                     const blob = await res.blob();
-                                    // Verificación estricta: Si IG devuelve HTML en vez de foto, esto lo frena.
                                     if (blob.type.startsWith('image/') && blob.size > 1000) {
                                         await new Promise((resolve) => {
                                             const reader = new FileReader();
                                             reader.onloadend = () => {
-                                                avatarImg.src = reader.result; // Base64 para evitar bloqueos
+                                                avatarImg.src = reader.result;
                                                 enableBtn();
                                                 resolve();
                                             };
                                             reader.readAsDataURL(blob);
                                         });
                                         loaded = true;
-                                        break; // Sale del loop si tuvo éxito
+                                        break; 
                                     }
                                 }
                             } catch (e) {
@@ -897,9 +944,7 @@
                             }
                         }
 
-                        // Si todos los proxys fallaron (cuenta súper privada o bloqueada)
                         if (!loaded) {
-                            console.warn("Todos los intentos automáticos fallaron. Usando silueta de IG.");
                             generateIGBlankAvatar();
                         }
 
@@ -910,7 +955,6 @@
 
                 loadAvatarSecurely(igUser);
 
-                // Renderizar Estrellas
                 let starsHTML = '';
                 for(let i=0; i<5; i++) {
                     if(i < stars) starsHTML += '<i class="ph-fill ph-star"></i>';
@@ -923,21 +967,55 @@
 
             // Flujo Normal: Cargar App
             initializeApp();
+            checkIgWarning(); // <-- Llamada a la nueva alerta de Instagram
         });
+
+        // --- LÓGICA DEL MODAL DE INSTAGRAM QUE SE MUESTRA SOLO UNA VEZ ---
+        function checkIgWarning() {
+            // Verificamos en localStorage si ya lo vió
+            if (!localStorage.getItem('ig_new_account_alert')) {
+                // Pequeño delay de 1.5s para que no salte de golpe al abrir la página
+                setTimeout(() => {
+                    const modal = document.getElementById('igWarningModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        setTimeout(() => {
+                            modal.classList.remove('opacity-0');
+                            modal.firstElementChild.classList.remove('scale-95');
+                            modal.firstElementChild.classList.add('scale-100');
+                        }, 10);
+                        // Guardar en el dispositivo que ya se mostró
+                        localStorage.setItem('ig_new_account_alert', 'true');
+                    }
+                }, 1500); 
+            }
+        }
+
+        function closeIgWarningModal() {
+            const modal = document.getElementById('igWarningModal');
+            if (modal) {
+                modal.classList.add('opacity-0');
+                modal.firstElementChild.classList.remove('scale-100');
+                modal.firstElementChild.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
 
         // Función para descargar la tarjeta como imagen
         function downloadIgCard() {
             const card = document.getElementById('igCard');
             
-            // Efecto visual de "Flash" sutil
             const originalBg = card.style.backgroundColor;
             card.style.backgroundColor = '#111';
             setTimeout(() => card.style.backgroundColor = originalBg, 150);
 
-            // Capturar Canvas
             html2canvas(card, {
                 backgroundColor: null,
-                scale: 3, // Alta resolución para historias
+                scale: 3, 
                 useCORS: true, 
                 allowTaint: false, 
                 logging: false
@@ -996,7 +1074,7 @@ Ambas partes acuerdan celebrar el presente contrato, el cual se regirá por las 
 A efectos del presente contrato, se entenderá por: a) 'Entregables': los archivos finales definidos en el alcance. b) 'Archivos fuente': los documentos editables en su formato nativo (ej. AI, PSD, FIG). c) 'Revisión': modificación solicitada por el CLIENTE que no altere el objeto inicial. d) 'Plazo hábil': aquellos días que no sean sábados, domingos ni feriados.</div>
 
 <div class="clausula"><b>CLÁUSULA SEGUNDA – OBJETO</b>
-El DISEÑADOR se obliga a prestar al CLIENTE los servicios de diseño gráfico que consisten en el desarrollo de las piezas descritas en la sección 'ALCANCE Y ENTREGABLES'. Dichos servicios se ejecutarán con total autonomía técnica y creativa, dentro de los lineamientos acordados.</div>
+El DISEÑADOR se obliga a prestare al CLIENTE los servicios de diseño gráfico que consisten en el desarrollo de las piezas descritas en la sección 'ALCANCE Y ENTREGABLES'. Dichos servicios se ejecutarán con total autonomía técnica y creativa, dentro de los lineamientos acordados.</div>
 
 <div class="clausula"><b>CLÁUSULA SEGUNDA BIS – ALCANCE Y ENTREGABLES</b>
 Servicios incluidos:
@@ -1327,7 +1405,6 @@ El presente contrato se regirá por las leyes de <span data-id="pais" class="con
             }, 300);
         }
 
-        // Renombrado a executePDF (antiguamente generatePDF)
         function executePDF() {
             showCustomToast("Generando PDF", "Calculando saltos de página en segundo plano...");
             
@@ -1463,7 +1540,6 @@ El presente contrato se regirá por las leyes de <span data-id="pais" class="con
 
             reviewIg = reviewIg.replace('@', '').trim();
             
-            // MAGIA: Construimos un Enlace que te llegará al correo
             const baseURL = window.location.origin + window.location.pathname;
             const adminMagicLink = `${baseURL}?admin_review=true&ig=${encodeURIComponent(reviewIg)}&stars=${rating}&text=${encodeURIComponent(reviewText)}`;
 
